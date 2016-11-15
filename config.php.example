@@ -1,0 +1,21 @@
+<?php
+    //Configuration File
+    //key=>secret
+    $config = array(
+        'lti_keys'=>array(
+            'YOUR_CLIENT_KEY'=>'YOUR_CLIENT_SECRET'
+        ),
+        'use_db'=>true,
+        'is_dev'=>true,
+        'use_dummydata'=>true,
+        'sendgrade'=>true,
+        'app_name'=>'nounclassify',
+        'db'=>array(
+            'driver'=>'mysql',
+            'hostname'=>'localhost',
+            'username'=>'username',
+            'password'=>'password',
+            'dbname'=>'nounclassify_db',
+        )
+    );
+?>
