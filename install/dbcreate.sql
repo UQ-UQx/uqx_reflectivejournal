@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 17, 2016 at 02:45 AM
+-- Generation Time: Nov 17, 2016 at 03:14 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -13,6 +13,22 @@ SET time_zone = "+00:00";
 --
 -- Database: `reflectivejournal`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activity`
+--
+
+CREATE TABLE `activity` (
+  `activity_id` int(11) NOT NULL,
+  `course_id` varchar(1000) NOT NULL,
+  `title` text,
+  `introtext` text NOT NULL,
+  `feedback` text NOT NULL,
+  `type` varchar(500) NOT NULL,
+  `grade` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -32,6 +48,12 @@ CREATE TABLE `studentresponse` (
 --
 
 --
+-- Indexes for table `activity`
+--
+ALTER TABLE `activity`
+  ADD PRIMARY KEY (`activity_id`);
+
+--
 -- Indexes for table `studentresponse`
 --
 ALTER TABLE `studentresponse`
@@ -41,6 +63,11 @@ ALTER TABLE `studentresponse`
 -- AUTO_INCREMENT for dumped tables
 --
 
+--
+-- AUTO_INCREMENT for table `activity`
+--
+ALTER TABLE `activity`
+  MODIFY `activity_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `studentresponse`
 --
