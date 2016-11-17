@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>UQx Noun Classify LTI Activity</title>
+    <title>UQx Relective Journal</title>
 
     <!-- Bootstrap -->
     <link href="www/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -22,9 +22,58 @@
     <script src="www/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="www/jqcloud/jqcloud.min.css" />
     <script type="text/javascript" src="www/jqcloud/jqcloud.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
-    <script src="www/js/d3pie.min.js"></script>
     <script src="www/js/validator.min.js"></script>
+    <script src="www/js/summernote/summernote.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="www/js/summernote/summernote.css" />
+    <style>
+    .word {
+    	font-family: Verdana, Tahoma, Arial;
+    	padding: 4px 4px 4px 4px;
+    	letter-spacing: 3px;
+    	text-decoration: none;
+    	font-weight: normal;
+    }
+    .size9 {
+    	color: #000;
+    	font-size: 30px;
+    }
+    .size8 {
+    	color: #111;
+    	font-size: 28px;
+    }
+    .size7 {
+    	color: #222;
+    	font-size: 26px;
+    }
+    .size6 {
+    	color: #333;
+    	font-size: 24px;
+    }
+    .size5 {
+    	color: #444;
+    	font-size: 22px;
+    }
+    .size4 {
+    	color: #555;
+    	font-size: 20px;
+    }
+    .size3 {
+    	color: #666;
+    	font-size: 18px;
+    }
+    .size2 {
+    	color: #777;
+    	font-size: 16px;
+    }
+    .size1 {
+    	color: #888;
+    	font-size: 10px;
+    }
+    .size0 {
+       color: #999;
+       font-size: 7px;
+    }
+    </style>
   </head>
   <body>
     <div class="container">

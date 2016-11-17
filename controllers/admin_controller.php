@@ -14,8 +14,8 @@
       $resource_link_id = $this->context_vars['resource_link_id'];
       $title = "";
       $introtext = "";
-      $question = "";
-      $wordclouddisplaytext = "";
+      $feedback = "";
+      $type = "text";
       $grade = 0;
       $activityobj = $db->read( 'activity', $activityId)->fetch();
       $message = "";
@@ -24,13 +24,14 @@
       try {
     		$activityobj = $db->read( 'activity', $activityId)->fetch();
     		if(empty($activityobj)) {
+          $activityId = -1;
     			$message .= '<p>This activity does not exist and will need to be created. Please follow the Admin/Instructor Instructions.</p>';
     		}
     		else {
           $title = $activityobj->title;
           $introtext = $activityobj->introtext;
-          $question = $activityobj->question;
-          $wordclouddisplaytext = $activityobj->wordclouddisplaytext;
+          $feedback = $activityobj->feedback;
+          $type = $activityobj->type;
           $grade = $activityobj->grade;
     		}
     	}
@@ -47,11 +48,11 @@
       $courseId = $_POST['courseId'];
       $title = $_POST['title'];
       $introtext = $_POST['introtext'];
-      $question = $_POST['question'];
-      $wordclouddisplaytext = $_POST['wordclouddisplaytext'];
+      $feedback = $_POST['feedback'];
+      $type = $_POST['type'];
       $grade = $_POST['grade'];
 
-      $data = array( 'title' => $title, 'introtext' => $introtext, 'question' => $question, 'wordclouddisplaytext' => $wordclouddisplaytext, 'grade' => $grade);
+      $data = array( 'title' => $title, 'introtext' => $introtext, 'feedback' => $feedback, 'type' => $type, 'grade' => $grade);
       if ($activityId!=-1)
       {
         $data['activity_id'] = $activityId;

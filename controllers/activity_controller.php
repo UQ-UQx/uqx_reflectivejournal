@@ -2,6 +2,7 @@
   require_once('controllers/base_controller.php');
   require_once('lib/grade.php');
   require_once('config.php');
+  require_once('lib/reflectivejournal_utils.php');
 
   class ActivityController extends BaseController {
 
@@ -15,8 +16,8 @@
       $resource_link_id = $this->context_vars['resource_link_id'];
       $title = "";
       $introtext = "";
-      $question = "";
-      $wordclouddisplaytext = "";
+      $feedback = "";
+      $type = "";
       $activityobj = $db->read('activity', $activityId)->fetch();
       $message = "";
       $studentresponse = "";
@@ -29,26 +30,27 @@
         else {
           $title = $activityobj->title;
           $introtext = $activityobj->introtext;
-          $question = $activityobj->question;
-          $wordclouddisplaytext = $activityobj->wordclouddisplaytext;
+          $feedback = $activityobj->feedback;
+          $type = $activityobj->type;
         }
       }
       catch(Exception $e) {
         $message .= '<p>' . $e->getMessage() . '</p>';
       }
 
-      $questionresponse = '';
+      $reflectivetext = '';
+      $response_id = -1;
       try {
-        $select = $db->query( 'SELECT questionresponse FROM studentresponse WHERE student_id = :student_id AND activity_id = :activity_id', array( 'student_id' => $userId,  'activity_id' => $activityId) ); // Prepare and execute SQL
+        $select = $db->query( 'SELECT response_id, reflectivetext FROM studentresponse WHERE student_id = :student_id AND activity_id = :activity_id', array( 'student_id' => $userId,  'activity_id' => $activityId) ); // Prepare and execute SQL
         while ( $row = $select->fetch() ) // It's a row fetching method
         {
-          $questionresponse =  $row->questionresponse;
+          $reflectivetext =  htmlspecialchars_decode($row->reflectivetext);
+          $response_id = $row->response_id;
         }
       }
       catch(Exception $e) {
         $message .= '<p>' . $e->getMessage() . '</p>';
       }
-      list($word_json, $classification_json) = getnounsummary($db, $activityId);
 
       require_once('views/activity/learnerinput.php');
     }
@@ -56,31 +58,18 @@
     public function results() {
       $db = Db::instance();
 
-      $activityId = $this->context_vars['activityId'];
       $userId = $this->context_vars['userId'];
-      $title = "";
-      $introtext = "";
-      $question = "";
-      $wordclouddisplaytext = "";
-      $activityobj = $db->read('activity', $activityId)->fetch();
-      $message = "";
+      $resource_link_id = $this->context_vars['resource_link_id'];
+
+      $journalentries = array();
 
       try {
-        $activityobj = $db->read('activity', $activityId)->fetch();
-        if(empty($activityobj)) {
-          $message .= '<p>This activity does not exist. Please contact UQx Technical Team.</p>';
-        }
-        else {
-          $title = $activityobj->title;
-          $introtext = $activityobj->introtext;
-          $question = $activityobj->question;
-          $wordclouddisplaytext = $activityobj->wordclouddisplaytext;
-        }
+        $journalentries = get_journalentries($db, $userId);
+        $tags = get_tagcloud($journalentries);
       }
       catch(Exception $e) {
         $message .= '<p>' . $e->getMessage() . '</p>';
       }
-
 
       require_once('views/activity/results.php');
     }
@@ -89,16 +78,38 @@
       $db = Db::instance();
 
       $activityId = $_POST['activityId'];
+      $responseId = $_POST['responseId'];
       $userId = $_POST['userId'];
-      $questionresponse = $_POST['questionresponse'];
+      $reflectivetext = htmlspecialchars($_POST['reflectivetext']);
 
-      $data = array( 'activity_id' => $activityId, 'student_id' => $userId , 'questionresponse' => $questionresponse);
+      $data = array( 'activity_id' => $activityId, 'student_id' => $userId , 'reflectivetext' => $reflectivetext);
 
-      $db->create('studentresponse', $data);
-      $id = $db->id(); // Get last inserted id
+      if ($responseId!=-1)
+      {
+        $data['response_id'] = $responseId;
+      }
+      $addedit_mode = "add";
+      $id = 0;
+      if (array_key_exists('response_id', $data)) {
+        $addedit_mode = "edit";
+        $id = $data['response_id'];
+      }
+
+      if ($addedit_mode == "add")
+      {
+        $db->create( 'studentresponse', $data );
+        $id = $db->id(); // Get last inserted id
+      }
+      else {
+        $db->update( 'studentresponse', $data);
+      }
+
+      //$db->create('studentresponse', $data);
+      //$id = $db->id(); // Get last inserted id
 
       //send grade back to LTI container
       $sendgrade = $this->context_vars['sendgrade'];
+      /*
       if ($sendgrade==True)
       {
         $grade = 1;
@@ -107,7 +118,14 @@
         $lti_vars = $_SESSION[$app_name][$resource_link_id];
         send_grade2($grade,$lti_vars);
       }
+      */
 
+    }
+
+    public function downloadword() {
+      $db = Db::instance();
+      $userId = $this->context_vars['userId'];
+      buildandexport_word($db, $userId);
     }
   }
 ?>

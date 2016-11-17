@@ -62,12 +62,12 @@
   if ($use_dummydata == True)
   {
     // Test data
-    $activityId = 64;
+    $activityId = 1;
     $userRoles = 'Student';
     //$userRoles = 'Instructor';
     $userId = 160;
-    $activity_displaytype = 'learnerinput';
-    //$activity_displaytype = 'results';
+    //$activity_displaytype = 'learnerinput';
+    $activity_displaytype = 'results';
 
   }
 
@@ -124,13 +124,17 @@
   }
 
   // If format is not json (i.e., not an ajax call then only render routes.php)
-  if ($format == 'json')
+  if ($format == 'json' or $format == 'word')
   {
+    if ($format=='word')
+    {
+      $action = "downloadword";
+    }
     require_once('routes.php');
   }
   else {
     require_once('views/layout.php');
   }
-  print_r($_SESSION);
+  //print_r($_SESSION);
   session_write_close()
 ?>

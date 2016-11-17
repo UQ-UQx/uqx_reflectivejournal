@@ -36,15 +36,18 @@
     </div>
     <div class="form-group">
       <label for="introtext">Intro Text</label> (* required)
-      <textarea class="form-control" rows="3" name="introtext" required><?php echo $introtext; ?></textarea>
+      <textarea class="form-control" rows="3" id="introtext" name="introtext" required><?php echo $introtext; ?></textarea>
     </div>
     <div class="form-group">
-      <label for="question">Question</label> (* required)
-      <textarea class="form-control" rows="3" name="question" id="question" required><?php echo $question; ?></textarea>
+      <label for="feedback">Feedback</label> (* required)
+      <textarea class="form-control" rows="3" name="feedback" id="feedback" required><?php echo $feedback; ?></textarea>
     </div>
     <div class="form-group">
       <label for="wordclouddisplaytext">Word Cloud Display Text</label> (* required)
-      <textarea class="form-control" rows="3" name="wordclouddisplaytext" id="wordclouddisplaytext" required><?php echo $wordclouddisplaytext; ?></textarea>
+      <label for="type">Select list:</label>  (* required)
+      <select class="form-control" id="type" name="type">
+        <option>Text</option>
+      </select>
     </div>
     <div class="form-group">
       <label for="grade">Grade</label> (* number required)
@@ -74,7 +77,7 @@
                 $('#activityId').val(json_data['activityID']);
                 $('#notcreated_message').hide();
                 $('#updatemessage').html(json_data['message']);
-                $('#updatemessage').fadeIn( "slow" )
+                $('#updatemessage').fadeIn( "slow" );
             },
             error: function() {
                 $('#updatemessage').text('An error occurred while saving the activity you entered. Please try again.');
