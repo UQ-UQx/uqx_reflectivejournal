@@ -4,12 +4,13 @@ require_once('TagCloud.php');
 function remove_stop_Words($input){
 
 	$commonWords = array('this','in','a','ain\'t','an','and','are','aren\'t','as','a\'s','at','be','been','but','by','can','cannot','cant','can\'t','c\'mon','co','co.','com','come','could','couldn\'t','did','didn\'t','do','does','doesn\'t','doing','done','don\'t','else','for','get','gets','go','got','had','hadn\'t','has','hasn\'t','have','haven\'t','having','he','he\'d','he\'ll','her','his','hither','how','however','if','in','inasmuch','inc','inc.','into','is','isn\'t','it','it\'d','it\'ll','its','it\'s','itself','i\'ve','let','let\'s','like','made','mainly','make','makes','many','may','maybe','mayn\'t','me','more','much','must','mustn\'t','my','myself','needs','neither','neverless','nevertheless','no','non','none','nor','not','now','of','off','often','oh','ok','okay','on','or','our','ours','ourselves','out','over','perhaps','please','plus','possible','presumably','probably','provided','provides','q','que','quite','qv','r','rather','rd','re','really','reasonably','recent','recently','regarding','regardless','regards','relatively','respectively','right','round','s','said','same','saw','say','saying','says','second','secondly','see','seeing','seem','seemed','seeming','seems','seen','self','selves','sent','several','shall','shan\'t','she','she\'d','she\'ll','she\'s','should','shouldn\'t','since','six','so','some','somebody','someday','somehow','someone','something','sometime','sometimes','somewhat','somewhere','soon','sorry','specified','specify','specifying','still','sub','such','sup','sure','t','take','taken','taking','tell','tends','th','than','thank','thanks','thanx','that','that\'ll','thats','that\'s','that\'ve','the','their','theirs','them','themselves','then','thence','there','thereafter','thereby','there\'d','therefore','therein','there\'ll','there\'re','theres','there\'s','thereupon','there\'ve','these','they','they\'d','they\'ll','they\'re','they\'ve','thing','things','think','third','thirty','this','thorough','thoroughly','those','though','three','through','throughout','thru','thus','till','to','together','too','took','toward','towards','tried','tries','truly','try','trying','t\'s','twice','two','u','un','under','underneath','undoing','unfortunately','unless','unlike','unlikely','until','unto','up','upon','upwards','us','use','used','useful','uses','using','usually','v','value','various','versus','very','via','viz','vs','w','want','wants','was','wasn\'t','way','we','we\'d','welcome','well','we\'ll','went','were','we\'re','weren\'t','we\'ve','what','whatever','what\'ll','what\'s','what\'ve','when','whence','whenever','where','whereafter','whereas','whereby','wherein','where\'s','whereupon','wherever','whether','which','whichever','while','whilst','whither','who','who\'d','whoever','whole','who\'ll','whom','whomever','who\'s','whose','why','will','willing','wish','with','within','without','wonder','won\'t','would','wouldn\'t','x','y','yes','yet','you','you\'d','you\'ll','your','you\'re','yours','yourself','yourselves','you\'ve','z','zero');
-
+  /*
   foreach ($commonWords as &$word){
     $input = str_ireplace(" ".$word." ", " ", $input);
   }
   return $input;
-	//return preg_replace('/\b('.implode('|',$commonWords).')\b/','',$input);
+  */
+	return preg_replace('/\b('.implode('|',$commonWords).')\b/','',$input);
 }
 
 /**
@@ -32,8 +33,8 @@ function get_tagcloud($journalentries)
   $cloud = new TagCloud();
   foreach ($journalentries as &$entry)
   {
-    print_r(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($entry['reflectivetext']))));
-    $cloud->addString(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($entry['reflectivetext']))));
+    $curr_entry = $str = strtolower($entry['reflectivetext']);
+    $cloud->addString(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($curr_entry))));
   }
   return $cloud->render();
 }

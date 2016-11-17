@@ -43,7 +43,6 @@
       <textarea class="form-control" rows="3" name="feedback" id="feedback" required><?php echo $feedback; ?></textarea>
     </div>
     <div class="form-group">
-      <label for="wordclouddisplaytext">Word Cloud Display Text</label> (* required)
       <label for="type">Select list:</label>  (* required)
       <select class="form-control" id="type" name="type">
         <option>Text</option>
