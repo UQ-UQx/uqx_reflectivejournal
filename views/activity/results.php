@@ -28,10 +28,12 @@
 			<?php }?>
 		</div>
 	<div class="col-sm-4">
-		<div class="panel panel-default">
-		  <div class="panel-heading">Tag Cloud</div>
-		  <div class="panel-body"><?php echo $tags; ?></div>
-		</div>
+		<?php if (count($journalentries)>0) { ?>
+			<div class="panel panel-default">
+			  <div class="panel-heading">Tag Cloud</div>
+			  <div class="panel-body"><?php echo $tags; ?></div>
+			</div>
+		<?php } ?>
 		<div id="wordcloud" style="width: 550px; height: 350px;"></div></div>
 </div>
 <script type="text/javascript">
