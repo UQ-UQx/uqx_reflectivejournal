@@ -68,6 +68,7 @@
     $userId = 160;
     //$activity_displaytype = 'learnerinput';
     $activity_displaytype = 'results';
+    $activities_to_include = '1';
 
   }
 
@@ -78,6 +79,7 @@
   $context_vars['userRoles'] = $userRoles;
   $context_vars['courseId'] = $courseId;
   $context_vars['activity_displaytype'] = $activity_displaytype;
+  $context_vars['activities_to_include'] = $activities_to_include;
   $context_vars['resource_link_id'] = $resource_link_id;
   $context_vars['sendgrade'] = $sendgrade;
 

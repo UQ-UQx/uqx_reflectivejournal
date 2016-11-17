@@ -60,11 +60,13 @@
 
       $userId = $this->context_vars['userId'];
       $resource_link_id = $this->context_vars['resource_link_id'];
+      $activity_ids = $this->context_vars['activities_to_include'];
+
 
       $journalentries = array();
 
       try {
-        $journalentries = get_journalentries($db, $userId);
+        $journalentries = get_journalentries($db, $userId, $activity_ids);
         $tags = get_tagcloud($journalentries);
       }
       catch(Exception $e) {
@@ -125,7 +127,8 @@
     public function downloadword() {
       $db = Db::instance();
       $userId = $this->context_vars['userId'];
-      buildandexport_word($db, $userId);
+      $activity_ids = $this->context_vars['activities_to_include'];
+      buildandexport_word($db, $userId, $activity_ids);
     }
   }
 ?>
