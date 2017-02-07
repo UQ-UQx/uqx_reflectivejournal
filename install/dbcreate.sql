@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 17, 2016 at 03:14 AM
+-- Generation Time: Feb 07, 2017 at 06:55 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -26,8 +26,7 @@ CREATE TABLE `activity` (
   `title` text,
   `introtext` text NOT NULL,
   `feedback` text NOT NULL,
-  `type` varchar(500) NOT NULL,
-  `grade` int(11) NOT NULL
+  `type` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -40,7 +39,8 @@ CREATE TABLE `studentresponse` (
   `response_id` int(11) NOT NULL,
   `activity_id` int(11) NOT NULL,
   `student_id` varchar(1000) NOT NULL,
-  `reflectivetext` text NOT NULL
+  `reflectivetext` text NOT NULL,
+  `dateadded` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

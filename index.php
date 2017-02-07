@@ -2,11 +2,7 @@
   require_once('config.php');
   require_once('lib/db_connection.php');
   require_once('lib/lti.php');
-
-  session_start();
-  //session_unset();
-  //session_destroy();
-  //session_start();
+  require_once('lib/encrypt.php');
 
   $warning_msg = '';
 
@@ -16,31 +12,15 @@
   $app_name = $config['app_name'];
   $use_dummydata = $config['use_dummydata'];
   $sendgrade = $config['sendgrade'];
+  $secret_key = $config['secret_key'];
 
-  if (isset($_GET['resource_link_id']))
-  {
-    $resource_link_id = $_GET['resource_link_id'];
-  }
-  else if (isset($_POST['resource_link_id']))
-  {
-    $resource_link_id = $_POST['resource_link_id'];
-  }
-  else {
-    if ($use_dummydata == True)
-    {
-      // Test data
-      $resource_link_id = "abc123";
-    }
-    else {
-      $warning_msg .= '<p>Invalid Session.</p>';
-    }
-  }
+  //print_r($_POST);
 
-  if (isset($_SESSION[$app_name][$resource_link_id]['lti-valid']) && ($_SESSION[$app_name][$resource_link_id]['lti-valid']== True) && !isset($_POST['oauth_consumer_key']))
+  //print_r("ctx post:" . $_POST['ctx']);
+
+  if (isset($_POST['oauth_consumer_key']))
   {
-    $context_vars = $_SESSION[$app_name][$resource_link_id];
-  }
-  else {
+    // check if lti is valid and then store lti variables to context_vars
     $lti = new Lti($config,true);
     $lti_valid = $lti->is_valid();
     if(!$lti->is_valid()) {
@@ -48,12 +28,53 @@
     }
     else {
       $ltidata = $lti->calldata();
-      // print_r($ltidata[resource_link_id]);
-      $resource_link_id = $ltidata['resource_link_id'];
-      $_SESSION[$app_name][$resource_link_id] = $lti->calldata();
-      $_SESSION[$app_name][$resource_link_id]['lti-valid'] = True;
+      $context_vars['activity_id'] = $ltidata['custom_activity_id'];
+      $context_vars['activity_displaytype'] = $ltidata['custom_activity_displaytype'];
+      $context_vars['activities_to_include'] = $ltidata['custom_activities_to_include'];
+      $context_vars['roles'] = $ltidata['roles'];
+      $context_vars['custom_activity_displaytype'] = $ltidata['custom_activity_displaytype'];
+      $context_vars['custom_activity_id'] = $ltidata['custom_activity_id'];
+      $context_vars['course_id'] = $ltidata['context_id'];
+      $context_vars['user_id'] = $ltidata['user_id'];
+      $context_vars['resource_link_id'] = $ltidata['resource_link_id'];
+      $context_vars['oauth_consumer_key'] = $ltidata['oauth_consumer_key'];
+      $context_vars['lis_result_sourcedid'] = $ltidata['lis_result_sourcedid'];
+      $context_vars['lis_outcome_service_url'] = $ltidata['lis_outcome_service_url'];
     }
   }
+  elseif (isset($_POST['ctx'])){
+    // get context_vars from ctx form posted variable
+    //print_r("getting values from ctx");
+    $context_vars['activity_id'] = $_POST['activity_id'];
+    $context_vars['course_id'] = $_POST['course_id'];
+    $context_vars['user_id'] = $_POST['user_id'];
+    $context_vars['custom_activity_displaytype'] = $_POST['activity_displaytype'];
+    $context_vars['custom_activity_id'] = $_POST['activity_id'];
+    $context_vars['activity_displaytype'] = $_POST['activity_displaytype'];
+    $context_vars['roles'] = decrypt($secret_key, $_POST['roles']);
+    $context_vars['resource_link_id'] = decrypt($secret_key, $_POST['resource_link_id']);
+    $context_vars['oauth_consumer_key'] = decrypt($secret_key, $_POST['consumer_key']);
+    $context_vars['lis_result_sourcedid'] = decrypt($secret_key, $_POST['lis_result_sourcedid']);
+    $context_vars['lis_outcome_service_url'] = decrypt($secret_key, $_POST['lis_outcome_service_url']);
+  }
+  else{
+    $warning_msg .= '<p>Loading Dummy LTI Data.</p>';
+    $lti = new Lti($config,true);
+    $ltidata = $lti->calldata();
+    $context_vars['activity_id'] = $ltidata['custom_activity_id'];
+    $context_vars['course_id'] = $ltidata['context_id'];
+    $context_vars['user_id'] = $ltidata['user_id'];
+    $context_vars['custom_activity_displaytype'] = $ltidata['custom_activity_displaytype'];
+    $context_vars['custom_activity_id'] = $ltidata['custom_activity_id'];
+    $context_vars['activity_displaytype'] = $ltidata['custom_activity_displaytype'];
+    $context_vars['roles'] = $ltidata['roles'];
+    $context_vars['resource_link_id'] = $ltidata['resource_link_id'];
+    $context_vars['oauth_consumer_key'] = $ltidata['oauth_consumer_key'];
+    $context_vars['lis_result_sourcedid'] = $ltidata['lis_result_sourcedid'];
+    $context_vars['lis_outcome_service_url'] = $ltidata['lis_outcome_service_url'];
+  }
+  //print_r("context_vars:");
+  //print_r($context_vars);
 
   $admin_msg = '';
 
@@ -62,26 +83,21 @@
   if ($use_dummydata == True)
   {
     // Test data
-    $activityId = 1;
-    $userRoles = 'Student';
-    //$userRoles = 'Instructor';
-    $userId = 160;
-    //$activity_displaytype = 'learnerinput';
-    $activity_displaytype = 'results';
-    $activities_to_include = '1';
+    $activityId = 2;
+    //$userRoles = 'Student';
+    $userRoles = 'Instructor';
+    $userId = 45;
+    $activity_displaytype = 'learnerinput';
+    //$activity_displaytype = 'results';
+    $activities_to_include = '2';
+
+    $context_vars['activity_id'] = $activityId;
+    $context_vars['roles'] = $userRoles;
+    $context_vars['user_id'] = $userId;
+    $context_vars['activity_displaytype'] = $activity_displaytype;
+    $context_vars['activities_to_include'] = $activities_to_include;
 
   }
-
-  //$context_vars = array('activityId' => $activityId, 'userId' => $userId, 'userRoles' => $userRoles, 'courseId' => $courseId, 'activity_displaytype' => $activity_displaytype);
-
-  $context_vars['activityId'] = $activityId;
-  $context_vars['userId'] = $userId;
-  $context_vars['userRoles'] = $userRoles;
-  $context_vars['courseId'] = $courseId;
-  $context_vars['activity_displaytype'] = $activity_displaytype;
-  $context_vars['activities_to_include'] = $activities_to_include;
-  $context_vars['resource_link_id'] = $resource_link_id;
-  $context_vars['sendgrade'] = $sendgrade;
 
   /*
     Custom Controller
@@ -89,7 +105,8 @@
     controller and action to run
   */
 
-  if ($userRoles=="Student") {
+  //if ($userRoles=="Student") {
+  if ($activityId > 0) {
     $controller = 'activity';
     if ($activity_displaytype=="results")
     {
@@ -101,6 +118,9 @@
     else{
       $action = 'learnerinput';
     }
+    if (isset($_GET['controller'])){
+      $controller = $_GET['controller'];
+    }
   } elseif ($userRoles == 'Instructor' || $userRoles == 'Administrator') {
     if (isset($_GET['controller']) && isset($_GET['action'])) {
       $controller = $_GET['controller'];
@@ -110,6 +130,8 @@
       $action     = 'addeditform';
     }
   }
+  //print_r("controller:");
+  //print_r($controller . '-' .$action);
 
   if(isset($config['use_db']) && $config['use_db']) {
     try {
@@ -126,17 +148,12 @@
   }
 
   // If format is not json (i.e., not an ajax call then only render routes.php)
-  if ($format == 'json' or $format == 'word')
+  if ($format == 'json')
   {
-    if ($format=='word')
-    {
-      $action = "downloadword";
-    }
     require_once('routes.php');
   }
   else {
     require_once('views/layout.php');
   }
-  //print_r($_SESSION);
-  session_write_close()
+
 ?>

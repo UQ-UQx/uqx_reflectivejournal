@@ -62,53 +62,49 @@
 	$courseId = '';
 	$activityId = 0;
 	$activity_displaytype = '';
-	$activities_to_include = '';
 
 	// Assign default values for all possible LTI Variables
-	if(isset($_SESSION[$app_name][$resource_link_id]['user_id'])) {
-		$userId = $_SESSION[$app_name][$resource_link_id]['user_id'];
+	if(isset($context_vars['user_id'])) {
+		$userId = $context_vars['user_id'];
 	}
 	else {
 		$ltivars_warning_msg .= '<p>LTI var: user_id is not available.</p>';
 	}
 
-	if(isset($_SESSION[$app_name][$resource_link_id]['roles'])) {
-		$userRoles = $_SESSION[$app_name][$resource_link_id]['roles'];
+	if(isset($context_vars['roles'])) {
+		$userRoles = $context_vars['roles'];
 	}
 	else {
 		$ltivars_warning_msg .= '<p>LTI var: roles is not available.</p>';
 	}
 
-	if(isset($_SESSION[$app_name][$resource_link_id]['context_id'])) {
-		$courseId = $_SESSION[$app_name][$resource_link_id]['context_id'];
+	if(isset($context_vars['course_id'])) {
+		$courseId = $context_vars['course_id'];
 	}
 	else {
 		$ltivars_warning_msg .= '<p>LTI var: context_id is not available.</p>';
 	}
 
-	if(isset($_SESSION[$app_name][$resource_link_id]['custom_activity_id'])) {
-		$activityId = $_SESSION[$app_name][$resource_link_id]['custom_activity_id'];
+	if(isset($context_vars['custom_activity_id'])) {
+		$activityId = $context_vars['custom_activity_id'];
 	}
 	else {
 		$ltivars_warning_msg .= '<p>LTI var: custom_activity_id is not available.</p>';
 	}
 
-	if(isset($_SESSION[$app_name][$resource_link_id]['custom_activity_displaytype'])) {
-		$activity_displaytype = $_SESSION[$app_name][$resource_link_id]['custom_activity_displaytype'];
+	if(isset($context_vars['custom_activity_displaytype'])) {
+		$activity_displaytype = $context_vars['custom_activity_displaytype'];
 	}
 	else {
 		$ltivars_warning_msg .= '<p>LTI var: custom_activity_displaytype is not available.</p>';
 	}
 
-	if(isset($_SESSION[$app_name][$resource_link_id]['custom_activities_to_include'])) {
-		$activities_to_include = $_SESSION[$app_name][$resource_link_id]['custom_activities_to_include'];
+	if(isset($context_vars['resource_link_id'])) {
+		$resource_link_id = $context_vars['resource_link_id'];
 	}
-	/*
-	// Is not mandatory
 	else {
-		$ltivars_warning_msg .= '<p>LTI var: custom_activities_to_include is not available.</p>';
+		$ltivars_warning_msg .= '<p>LTI var: resource_link_id is not available.</p>';
 	}
-	*/
 
 	$warning_msg .= $ltivars_warning_msg;
 

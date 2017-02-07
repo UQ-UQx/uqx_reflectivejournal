@@ -21,14 +21,21 @@
     </div>
   <?php } ?>
 
-  <form id="addeditform" role="form" data-toggle="validator" action="?controller=admin&action=update&format=json&resource_link_id=<?php echo $resource_link_id; ?>" method="post">
-    <input type="hidden" id="activityId" name="activityId" value="<?php echo $activityId; ?>">
-    <input type="hidden" id="courseId" name="courseId" value="<?php echo $courseId; ?>">
+  <form id="addeditform" role="form" data-toggle="validator" action="?controller=admin&action=update&format=json" method="post">
+    <input type="hidden" id="activity_id" name="activity_id" value="<?php echo $activity_id; ?>">
+    <input type="hidden" id="course_id" name="course_id" value="<?php echo $course_id; ?>">
+    <input type="hidden" id="activity_displaytype" name="activity_displaytype" value="<?php echo $activity_displaytype; ?>">
+    <input type="hidden" id="ctx" name="ctx" value="<?php echo $ctx; ?>">
+    <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
+    <input type="hidden" id="resource_link_id" name="resource_link_id" value="<?php echo $resource_link_id; ?>">
+    <input type="hidden" id="consumer_key" name="consumer_key" value="<?php echo $oauth_consumer_key; ?>">
+    <input type="hidden" id="lis_result_sourcedid" name="lis_result_sourcedid" value="<?php echo $lis_result_sourcedid; ?>">
+    <input type="hidden" id="roles" name="roles" value="<?php echo $roles; ?>">
     <h2>Add/Edit Activity</h2>
     <div id="updatemessage" class="alert alert-warning" role="alert"></div>
     <div class="form-group">
       <label>Activity ID</label>
-      <p class="form-control-static"><span id="activityid_dsp"><?php if ($activityId!=-1) { ?> <?php echo $activityId; ?><?php } ?></span></p>
+      <p class="form-control-static"><span id="activityid_dsp"><?php if ($activity_id!=-1) { ?> <?php echo $activity_id; ?><?php } ?></span></p>
     </div>
     <div class="form-group">
       <label for="title">Title</label>
@@ -48,15 +55,9 @@
         <option>Text</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="grade">Grade</label> (* number required)
-      <input type="number" class="form-control" id="grade" name="grade" data-error="A number must be entered." required value="<?php echo $grade; ?>">
-      <div class="help-block with-errors"></div>
-    </div>
     <button type="submit" id="submitbtn" class="btn btn-default">Save</button>
   </form>
 </div>
-
 <script type="text/javascript">
     $('#updatemessage').hide();
     var frm = $('#addeditform');
@@ -72,8 +73,8 @@
             data: frm.serialize(),
             success: function (data) {
                 var json_data = $.parseJSON(data);
-                $('#activityid_dsp').html(json_data['activityID']);
-                $('#activityId').val(json_data['activityID']);
+                $('#activityid_dsp').html(json_data['activity_id']);
+                $('#activity_id').val(json_data['activity_id']);
                 $('#notcreated_message').hide();
                 $('#updatemessage').html(json_data['message']);
                 $('#updatemessage').fadeIn( "slow" );

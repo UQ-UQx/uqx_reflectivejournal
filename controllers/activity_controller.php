@@ -1,7 +1,6 @@
 <?php
   require_once('controllers/base_controller.php');
   require_once('lib/grade.php');
-  require_once('config.php');
   require_once('lib/reflectivejournal_utils.php');
 
   class ActivityController extends BaseController {
@@ -10,20 +9,34 @@
 
     public function learnerinput() {
       $db = Db::instance();
-      $activityId = $this->context_vars['activityId'];
-      $userId = $this->context_vars['userId'];
-      $courseId = $this->context_vars['courseId'];
-      $resource_link_id = $this->context_vars['resource_link_id'];
+      $activity_id = $this->context_vars['activity_id'];
+      $user_id = $this->context_vars['user_id'];
+      $course_id = $this->context_vars['course_id'];
+      $activity_displaytype = $this->context_vars['activity_displaytype'];
+
+      include ('config.php');
+      $secret_key = $config['secret_key'];
+
+      $ctx = 1;
+      $current_role = $this->context_vars['roles'];
+      $roles = encrypt($secret_key, $this->context_vars['roles']);
+      //print_r("roles:");
+      //print_r($roles);
+      $resource_link_id = encrypt($secret_key, $this->context_vars['resource_link_id']);
+      $oauth_consumer_key = encrypt($secret_key, $this->context_vars['oauth_consumer_key']);
+      $lis_result_sourcedid = encrypt($secret_key, $this->context_vars['lis_result_sourcedid']);
+      $lis_outcome_service_url = encrypt($secret_key, $this->context_vars['lis_outcome_service_url']);
+
       $title = "";
       $introtext = "";
       $feedback = "";
       $type = "";
-      $activityobj = $db->read('activity', $activityId)->fetch();
+      $activityobj = $db->read('activity', $activity_id)->fetch();
       $message = "";
       $studentresponse = "";
 
       try {
-        $activityobj = $db->read('activity', $activityId)->fetch();
+        $activityobj = $db->read('activity', $activity_id)->fetch();
         if(empty($activityobj)) {
           $message .= '<p>This activity does not exist. Please contact UQx Technical Team.</p>';
         }
@@ -41,7 +54,7 @@
       $reflectivetext = '';
       $response_id = -1;
       try {
-        $select = $db->query( 'SELECT response_id, reflectivetext FROM studentresponse WHERE student_id = :student_id AND activity_id = :activity_id', array( 'student_id' => $userId,  'activity_id' => $activityId) ); // Prepare and execute SQL
+        $select = $db->query( 'SELECT response_id, reflectivetext FROM studentresponse WHERE student_id = :student_id AND activity_id = :activity_id', array( 'student_id' => $user_id,  'activity_id' => $activity_id) ); // Prepare and execute SQL
         while ( $row = $select->fetch() ) // It's a row fetching method
         {
           $reflectivetext =  htmlspecialchars_decode($row->reflectivetext);
@@ -52,43 +65,35 @@
         $message .= '<p>' . $e->getMessage() . '</p>';
       }
 
-      require_once('views/activity/learnerinput.php');
-    }
-
-    public function results() {
-      $db = Db::instance();
-
-      $userId = $this->context_vars['userId'];
-      $resource_link_id = $this->context_vars['resource_link_id'];
-      $activity_ids = $this->context_vars['activities_to_include'];
-
-
       $journalentries = array();
+      $tags = "[]";
 
-      try {
-        $journalentries = get_journalentries($db, $userId, $activity_ids);
-        $tags = get_tagcloud($journalentries);
-      }
-      catch(Exception $e) {
-        $message .= '<p>' . $e->getMessage() . '</p>';
-      }
+      $journalentries = get_journalentries($db, $user_id, $activity_id);
+      $tags = get_tagcloud($journalentries);
 
-      require_once('views/activity/results.php');
+      require_once('views/activity/learnerinput.php');
     }
 
     public function save() {
       $db = Db::instance();
 
-      $activityId = $_POST['activityId'];
-      $responseId = $_POST['responseId'];
-      $userId = $_POST['userId'];
+      $activity_id = $_POST['activity_id'];
+      $response_id = $_POST['response_id'];
+      $user_id = $_POST['user_id'];
       $reflectivetext = htmlspecialchars($_POST['reflectivetext']);
 
-      $data = array( 'activity_id' => $activityId, 'student_id' => $userId , 'reflectivetext' => $reflectivetext);
+      $ctx = 1;
+      $user_id = $this->context_vars['user_id'];
+      $resource_link_id = $this->context_vars['resource_link_id'];
+      $oauth_consumer_key = $this->context_vars['oauth_consumer_key'];
+      $lis_result_sourcedid = $this->context_vars['lis_result_sourcedid'];
+      $lis_outcome_service_url = $this->context_vars['lis_outcome_service_url'];
 
-      if ($responseId!=-1)
+      $data = array( 'activity_id' => $activity_id, 'student_id' => $user_id , 'reflectivetext' => $reflectivetext, 'dateadded' => date("Y-m-d H:i:s"));
+
+      if ($response_id!=-1)
       {
-        $data['response_id'] = $responseId;
+        $data['response_id'] = $response_id;
       }
       $addedit_mode = "add";
       $id = 0;
@@ -111,24 +116,52 @@
 
       //send grade back to LTI container
       $sendgrade = $this->context_vars['sendgrade'];
+
+      include ('config.php');
+      $sendgrade = $config['sendgrade'];
+
       /*
       if ($sendgrade==True)
       {
-        $grade = 1;
-        $app_name = $config['app_name'];
-        $resource_link_id = $this->context_vars['resource_link_id'];
-        $lti_vars = $_SESSION[$app_name][$resource_link_id];
+        $lti_vars = array('lis_result_sourcedid'=>$lis_result_sourcedid, 'oauth_consumer_key'=>$oauth_consumer_key, 'oauth_consumer_secret'=>$oauth_consumer_secret, 'lis_outcome_service_url'=>$lis_outcome_service_url);
         send_grade2($grade,$lti_vars);
       }
       */
 
+      $journalentries = array();
+      $tags = "[]";
+
+      $journalentries = get_journalentries($db, $user_id, $activity_id);
+      $tags = get_tagcloud($journalentries);
+
+      echo '{"response_id":' . $id . ', "message": "The reflection was updated.", "tags": '. $tags . '}';
+
+    }
+
+    public function results() {
+      $db = Db::instance();
+
+      $user_id = $this->context_vars['user_id'];
+      $activity_ids = $this->context_vars['activities_to_include'];
+
+      $journalentries = array();
+      $tags = "";
+      try {
+        $journalentries = get_journalentries($db, $user_id, $activity_ids);
+        $tags = get_tagcloud($journalentries);
+      }
+      catch(Exception $e) {
+        $message .= '<p>' . $e->getMessage() . '</p>';
+      }
+
+      require_once('views/activity/results.php');
     }
 
     public function downloadword() {
       $db = Db::instance();
-      $userId = $this->context_vars['userId'];
+      $user_id = $this->context_vars['user_id'];
       $activity_ids = $this->context_vars['activities_to_include'];
-      buildandexport_word($db, $userId, $activity_ids);
+      buildandexport_word($db, $user_id, $activity_ids);
     }
   }
 ?>

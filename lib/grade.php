@@ -73,8 +73,8 @@
 		$sourcedid = $lti_vars['lis_result_sourcedid'];
 		if (get_magic_quotes_gpc()) $sourcedid = stripslashes($sourcedid);
 		$oauth_consumer_key = $lti_vars['oauth_consumer_key'];
-		$oauth_consumer_secret = '123456'; //$config['app_name']
-		$endpoint = $lti->grade_url();
+		$oauth_consumer_secret = '123456';
+		$endpoint = $lti_vars["lis_outcome_service_url"];
 		$content_type = "application/xml";
 		$operation = 'replaceResultRequest';
 		$messageIdent = $_SERVER['REQUEST_TIME'];

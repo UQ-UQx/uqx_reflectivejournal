@@ -36,20 +36,7 @@ function get_tagcloud($journalentries)
     $curr_entry = $str = strtolower($entry['reflectivetext']);
     $cloud->addString(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($curr_entry))));
   }
-	$tagcloud_array = $cloud->render('array');
-
-	$tag_cloud_json = "[";
-	foreach ($tagcloud_array as $key => $item){
-		$curr_tag = $item['tag'];
-		$curr_weight = $item['size'];
-		if ($curr_tag!="")
-		{
-			$tag_cloud_json = $tag_cloud_json . '{"weight":'. $curr_weight . ',"text":"'. $curr_tag .'", "html": {"data-toggle":"tooltip", "title": "' . $curr_weight .'"}},';
-		}
-	}
-	$tag_cloud_json = rtrim($tag_cloud_json, ",");
-	$tag_cloud_json = $tag_cloud_json . "]";
-	return $tag_cloud_json;
+  return $cloud->render();
 }
 
 function get_journaldetails($db, $activity_id)
@@ -66,7 +53,7 @@ function get_journaldetails($db, $activity_id)
 
 function get_journalentries($db, $student_id, $activity_ids){
     $select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id IN (:activity_ids)', array( 'student_id' => $student_id, 'activity_ids' => $activity_ids  ) );
-		$journalentries = array();
+    $journalentries = array();
     while ( $row = $select->fetch() ) {
       $title = get_journaldetails($db, $row->activity_id);
       $entry = array('activity_id'=>$row->activity_id, 'title'=>$title, 'reflectivetext'=>$row->reflectivetext);

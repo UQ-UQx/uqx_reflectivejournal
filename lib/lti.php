@@ -151,6 +151,7 @@ class Lti {
 		    'oauth_callback'=>'about:blank',
         'custom_activity_id' => -1,
 				'custom_activity_displaytype' => 'learnerinput',
+				'lis_outcome_service_url'=>'kjkjk'
 		);
 	}
 

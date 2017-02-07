@@ -31,10 +31,12 @@
 		<?php if (count($journalentries)>0) { ?>
 			<div class="panel panel-default">
 			  <div class="panel-heading">Tag Cloud</div>
-			  <div class="panel-body"><?php echo $tags; ?></div>
+			  <div class="panel-body">
+					<div id="wordcloud" style="min-width:200px; min-height:400px"></div></div>
+				</div>
 			</div>
 		<?php } ?>
-		<div id="wordcloud" style="width: 550px; height: 350px;"></div></div>
+
 </div>
 <script type="text/javascript">
   /*!
@@ -44,7 +46,12 @@
 
   $(function() {
     // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
-    //$("#wordcloud").jQCloud(word_array);
+		var tags = <?php echo $tags; ?>;
+		if (tags!="")
+		{
+			$('#wordcloud').jQCloud(tags, {'autoResize':true});
+			setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip(); }, 1000);
+		}
 
   });
 </script>

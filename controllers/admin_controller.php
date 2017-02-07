@@ -1,6 +1,7 @@
 <?php
 
   require_once('controllers/base_controller.php');
+  require_once('lib/encrypt.php');
 
   class AdminController extends BaseController {
 
@@ -8,23 +9,34 @@
 
     public function addeditform() {
       $db = Db::instance();
-      $activityId = $this->context_vars['activityId'];
-      $userId = $this->context_vars['userId'];
-      $courseId = $this->context_vars['courseId'];
-      $resource_link_id = $this->context_vars['resource_link_id'];
+      $activity_id = $this->context_vars['activity_id'];
+      $user_id = $this->context_vars['user_id'];
+      $course_id = $this->context_vars['course_id'];
+      $activity_displaytype = $this->context_vars['activity_displaytype'];
+
+      include ('config.php');
+      $secret_key = $config['secret_key'];
+
+      $ctx = 1;
+      $roles = encrypt($secret_key, $this->context_vars['roles']);
+
+      $resource_link_id = encrypt($secret_key, $this->context_vars['resource_link_id']);
+      $oauth_consumer_key = encrypt($secret_key, $this->context_vars['oauth_consumer_key']);
+      $lis_result_sourcedid = encrypt($secret_key, $this->context_vars['lis_result_sourcedid']);
+
       $title = "";
       $introtext = "";
       $feedback = "";
       $type = "text";
       $grade = 0;
-      $activityobj = $db->read( 'activity', $activityId)->fetch();
+      $activityobj = $db->read( 'activity', $activity_id)->fetch();
       $message = "";
       $admin_msg = '<p>You have “Staff” access to this course and can edit the text of this activity. Please view the live version and switch to a student role to view the activity as a student.</br>This LTI tool can be used and customised in multiple edX course locations. A unique activity_id is required and must be set in Custom Parameters within the Edit LTI Block screen. When creating a new AB Split Poll activity, set the activity_id to –1 (e.g. [“activity_id=-1”]). The add/edit activity screen will be displayed where you can add a title, intro screen and final screens. Once the activity is saved a new activity_id will be displayed. The new activity_id should be updated in Custom Parameters within the Edit LTI Block screen (e.g. ["activity_id=7”]).</p>';
 
       try {
-    		$activityobj = $db->read( 'activity', $activityId)->fetch();
+    		$activityobj = $db->read( 'activity', $activity_id)->fetch();
     		if(empty($activityobj)) {
-          $activityId = -1;
+          $activity_id = -1;
     			$message .= '<p>This activity does not exist and will need to be created. Please follow the Admin/Instructor Instructions.</p>';
     		}
     		else {
@@ -32,7 +44,6 @@
           $introtext = $activityobj->introtext;
           $feedback = $activityobj->feedback;
           $type = $activityobj->type;
-          $grade = $activityobj->grade;
     		}
     	}
     	catch(Exception $e) {
@@ -44,18 +55,23 @@
 
     public function update() {
       $db = Db::instance();
-      $activityId = $_POST['activityId'];
-      $courseId = $_POST['courseId'];
+      $activity_id = $_POST['activity_id'];
+      $course_id = $_POST['course_id'];
+      $ctx = 1;
+      $user_id = $this->context_vars['user_id'];
+      $resource_link_id = $this->context_vars['resource_link_id'];
+      $oauth_consumer_key = $this->context_vars['oauth_consumer_key'];
+      $lis_result_sourcedid = $this->context_vars['lis_result_sourcedid'];
+
       $title = $_POST['title'];
       $introtext = $_POST['introtext'];
       $feedback = $_POST['feedback'];
       $type = $_POST['type'];
-      $grade = $_POST['grade'];
 
-      $data = array( 'title' => $title, 'introtext' => $introtext, 'feedback' => $feedback, 'type' => $type, 'grade' => $grade);
-      if ($activityId!=-1)
+      $data = array( 'title' => $title, 'introtext' => $introtext, 'feedback' => $feedback, 'type' => $type);
+      if ($activity_id!=-1)
       {
-        $data['activity_id'] = $activityId;
+        $data['activity_id'] = $activity_id;
       }
       $addedit_mode = "add";
       $id = 0;
@@ -72,7 +88,7 @@
       else {
         $db->update( 'activity', $data);
       }
-      echo '{"activityID":' . $id . ', "message": "The activity was updated."}';
+      echo '{"activity_id":' . $id . ', "message": "The activity was updated."}';
     }
   }
 ?>
