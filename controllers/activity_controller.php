@@ -120,14 +120,13 @@
       include ('config.php');
       $sendgrade = $config['sendgrade'];
 
-      /*
+
       if ($sendgrade==True)
       {
         $lti_vars = array('lis_result_sourcedid'=>$lis_result_sourcedid, 'oauth_consumer_key'=>$oauth_consumer_key, 'oauth_consumer_secret'=>$oauth_consumer_secret, 'lis_outcome_service_url'=>$lis_outcome_service_url);
         send_grade2($grade,$lti_vars);
       }
-      */
-
+      
       $journalentries = array();
       $tags = "[]";
 

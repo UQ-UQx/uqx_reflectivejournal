@@ -86,7 +86,7 @@
     $activityId = 2;
     //$userRoles = 'Student';
     $userRoles = 'Instructor';
-    $userId = 45;
+    $userId = 46;
     $activity_displaytype = 'learnerinput';
     //$activity_displaytype = 'results';
     $activities_to_include = '2';

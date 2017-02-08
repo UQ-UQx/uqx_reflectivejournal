@@ -20,7 +20,7 @@
   </div>
 <?php } ?>
 
-<h2><img src="www/img/unnamed.png" width="38" height="38"/><?php echo $title; ?></h2>
+<h2><img src="www/img/journal_icon.png"  alt="Journal Icon" width="38" height="38"/><?php echo $title; ?></h2>
 <p><?php echo $introtext; ?></p>
 
 <div class="row">
@@ -52,6 +52,9 @@
           </div>
         </form>
         <p></p>
+        <div id="validation_container" class="alert alert-danger">
+          <strong>The reflective journal entry is blank. Please type in your reflection and then click on the Submit button.</strong>
+        </div>
         <div id="feedback_container" class="alert alert-info">
           <strong>Feedback:</strong>
           <br/>
@@ -73,6 +76,7 @@
 
     $(function() {
       $('#feedback_container').hide();
+      $('#validation_container').hide();
 
       // Render Summernote editor
       //$('#summernote').summernote();
@@ -99,26 +103,31 @@
       }
 
       $( "#submitbtn" ).click(function() {
-        $('#reflectivetext').val($('#summernote').summernote('code'));
-        $.ajax({
-            type: frm.attr('method'),
-            url: frm.attr('action'),
-            data: frm.serialize(),
-            success: function (data) {
-                //$('#feedback').html('');
-                $('#feedback_container').show();
-                var json_data = $.parseJSON(data);
-                $('#response_id').val(json_data['response_id']);
-                $('#wordcloud').jQCloud('destroy');
-                $('#wordcloud').jQCloud(json_data['tags'], {'autoResize':true});
-                setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip(); }, 1000);
-                //console.log(data);
-                //var json_data = $.parseJSON(data);
-                // $('#submitbtn').prop('disabled', true);
-                // $('#questionresponse').prop('disabled', true);
-            }
 
-        });
+        $('#reflectivetext').val($('#summernote').summernote('code'));
+        if (($('#reflectivetext').val() == "") || ($('#reflectivetext').val() == "<p><br></p>"))
+        {
+          $('#feedback_container').hide();
+          $('#validation_container').show();
+        }
+        else{
+          $.ajax({
+              type: frm.attr('method'),
+              url: frm.attr('action'),
+              data: frm.serialize(),
+              success: function (data) {
+                  //$('#feedback').html('');
+                  $('#feedback_container').show();
+                  $('#validation_container').hide();
+                  var json_data = $.parseJSON(data);
+                  $('#response_id').val(json_data['response_id']);
+                  $('#wordcloud').jQCloud('destroy');
+                  $('#wordcloud').jQCloud(json_data['tags'], {'autoResize':true});
+                  setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip(); }, 1000);
+              }
+          });
+        }
+
       });
 
     });

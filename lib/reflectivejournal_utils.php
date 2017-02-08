@@ -30,25 +30,31 @@ function strip_tags_with_whitespace($string, $allowable_tags = null)
 
 function get_tagcloud($journalentries)
 {
-  $cloud = new TagCloud();
-  foreach ($journalentries as &$entry)
-  {
-    $curr_entry = $str = strtolower($entry['reflectivetext']);
-    $cloud->addString(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($curr_entry))));
-  }
-	$tagcloud_array = $cloud->render('array');
+	$tag_cloud_json = "[]";
+	if (count($journalentries)>0){
+		$cloud = new TagCloud();
+	  foreach ($journalentries as &$entry)
+	  {
+	    $curr_entry = $str = strtolower($entry['reflectivetext']);
+	    $cloud->addString(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($curr_entry))));
+	  }
+		$tagcloud_array = $cloud->render('array');
+		//print_r($journalentries);
+		//print_r($tagcloud_array);
 
-	$tag_cloud_json = "[";
-	foreach ($tagcloud_array as $key => $item){
-		$curr_tag = $item['tag'];
-		$curr_weight = $item['size'];
-		if ($curr_tag!="")
-		{
-			$tag_cloud_json = $tag_cloud_json . '{"weight":'. $curr_weight . ',"text":"'. $curr_tag .'", "html": {"data-toggle":"tooltip", "title": "' . $curr_weight .'"}},';
+		$tag_cloud_json = "[";
+		foreach ($tagcloud_array as $key => $item){
+			$curr_tag = $item['tag'];
+			$curr_weight = $item['size'];
+			if ($curr_tag!="")
+			{
+				$tag_cloud_json = $tag_cloud_json . '{"weight":'. $curr_weight . ',"text":"'. $curr_tag .'", "html": {"data-toggle":"tooltip", "title": "' . $curr_weight .'"}},';
+			}
 		}
+		$tag_cloud_json = rtrim($tag_cloud_json, ",");
+		$tag_cloud_json = $tag_cloud_json . "]";
 	}
-	$tag_cloud_json = rtrim($tag_cloud_json, ",");
-	$tag_cloud_json = $tag_cloud_json . "]";
+
 	return $tag_cloud_json;
 }
 
