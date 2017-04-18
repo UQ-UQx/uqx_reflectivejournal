@@ -2,8 +2,8 @@
 -- version 4.4.10
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Feb 07, 2017 at 06:55 AM
+-- Host: localhost:8889
+-- Generation Time: Apr 18, 2017 at 06:40 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -23,10 +23,13 @@ SET time_zone = "+00:00";
 CREATE TABLE `activity` (
   `activity_id` int(11) NOT NULL,
   `course_id` varchar(1000) NOT NULL,
+  `entry_title` varchar(1000) NOT NULL,
   `title` text,
   `introtext` text NOT NULL,
   `feedback` text NOT NULL,
-  `type` varchar(500) NOT NULL
+  `type` varchar(500) NOT NULL,
+  `show_wordcloud` tinyint(1) NOT NULL,
+  `wordcount_limit` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -38,6 +41,7 @@ CREATE TABLE `activity` (
 CREATE TABLE `studentresponse` (
   `response_id` int(11) NOT NULL,
   `activity_id` int(11) NOT NULL,
+  `course_id` varchar(1000) NOT NULL,
   `student_id` varchar(1000) NOT NULL,
   `reflectivetext` text NOT NULL,
   `dateadded` datetime NOT NULL

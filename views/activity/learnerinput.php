@@ -14,19 +14,20 @@
         <input type="hidden" id="consumer_key" name="consumer_key" value="<?php echo $oauth_consumer_key; ?>">
         <input type="hidden" id="lis_result_sourcedid" name="lis_result_sourcedid" value="<?php echo $lis_result_sourcedid; ?>">
         <input type="hidden" id="roles" name="roles" value="<?php echo $roles; ?>">
+        <input type="hidden" id="activities_to_include" name="activities_to_include" value="<?php echo $activities_to_include; ?>">
         <div class="pull-right"><button class="btn btn-link" type="submit">Edit LTI Activity</button></div>
       </form>
     </div>
   </div>
 <?php } ?>
 
-<h2><img src="www/img/journal_icon.png"  alt="Journal Icon" width="38" height="38"/><?php echo $title; ?></h2>
+<h2><img src="www/img/writing.png"  alt="Journal Icon" width="53" height="40"/><?php echo $title; ?></h2>
 <p><?php echo $introtext; ?></p>
 
 <div class="row">
 <div class="col-sm-8">
     <div class="panel panel-default">
-      <div class="panel-heading">Journal Entry</div>
+      <div class="panel-heading"><?php echo $entry_title; ?></div>
       <div class="panel-body">
         <form role="form" data-toggle="validator" id="inputresponseform" action="?controller=activity&action=save&format=json" method="post">
           <input type="hidden" id="activity_id" name="activity_id" value="<?php echo $activity_id; ?>">
@@ -43,6 +44,7 @@
           <input type="hidden" id="response_id" name="response_id" value="<?php echo $response_id; ?>">
           <div class="form-group" >
             <div id="summernote"><?php echo $reflectivetext; ?></div>
+            <p>Total word count: <span id="display_count">0</span> words. Words left: <span id="word_left"><?php echo $wordcount_limit; ?></span></p>
             <input type="hidden" name="reflectivetext" id="reflectivetext" />
             <!--<textarea class="form-control" rows="15" name="reflectivetext" id="reflectivetext" required></textarea>-->
             <span class="help-block with-errors"></span>
@@ -63,16 +65,31 @@
       </div>
     </div>
 </div>
-<div class="col-sm-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">Tag Cloud</div>
-      <div class="panel-body" style="min-height:400px;">
-          <div id="wordcloud" style="min-width:200px; min-height:400px"></div>
+<?php if ($show_wordcloud==1) { ?>
+  <div class="col-sm-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">Tag Cloud</div>
+        <div class="panel-body" style="min-height:400px;">
+            <div id="wordcloud" style="min-width:200px; min-height:400px"></div>
+        </div>
       </div>
-    </div>
-</div>
+  </div>
+<?php } ?>
+
 </div>
 <script type="text/javascript">
+    var show_wordcloud = <?php echo $show_wordcloud; ?>;
+    var wordcount_limit = <?php echo $wordcount_limit; ?>;
+
+    function count_words(entered_txt){
+      var no_words = entered_txt.match(/\S+/g).length;
+      return no_words;
+    }
+
+    function update_wordcount_dsp(no_words){
+      $('#display_count').text(no_words);
+      $('#word_left').text(wordcount_limit-no_words);
+    }
 
     $(function() {
       $('#feedback_container').hide();
@@ -93,10 +110,23 @@
         ]
       });
 
+      $('#summernote').on('summernote.keyup', function (e)
+      {
+              //console.log($('#summernote').summernote('code'));
+              var entered_text = $('#summernote').summernote('code');
+              entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
+
+              console.log(entered_text);
+              entered_text = entered_text.replace(/(<([^>]+)>)/ig, "").replace(/( )/, " ");
+              console.log(entered_text);
+              var word_count = count_words(entered_text);
+              update_wordcount_dsp(word_count);
+       });
+
       var frm = $('#inputresponseform');
 
       var tags = <?php echo $tags; ?>;
-      if (tags!="")
+      if (tags!="" & show_wordcloud==1)
       {
         $('#wordcloud').jQCloud(tags, {'autoResize':true});
         setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip(); }, 1000);
@@ -121,8 +151,10 @@
                   $('#validation_container').hide();
                   var json_data = $.parseJSON(data);
                   $('#response_id').val(json_data['response_id']);
-                  $('#wordcloud').jQCloud('destroy');
-                  $('#wordcloud').jQCloud(json_data['tags'], {'autoResize':true});
+                  if (show_wordcloud==1){
+                    $('#wordcloud').jQCloud('destroy');
+                    $('#wordcloud').jQCloud(json_data['tags'], {'autoResize':true});
+                  }
                   setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip(); }, 1000);
               }
           });

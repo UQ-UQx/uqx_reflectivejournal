@@ -42,6 +42,10 @@
       <input type="input" class="form-control" id="title" name="title" value="<?php echo $title; ?>">
     </div>
     <div class="form-group">
+      <label for="title">Entry Title</label> (* required)
+      <input type="input" class="form-control" id="entry_title" name="entry_title" value="<?php echo $entry_title; ?>">
+    </div>
+    <div class="form-group">
       <label for="introtext">Intro Text</label> (* required)
       <textarea class="form-control" rows="3" id="introtext" name="introtext" required><?php echo $introtext; ?></textarea>
     </div>
@@ -54,6 +58,17 @@
       <select class="form-control" id="type" name="type">
         <option>Text</option>
       </select>
+    </div>
+    <div class="form-group">
+      <label for="show_wordcloud">Show Word Cloud:</label>
+      <select class="form-control" id="show_wordcloud" name="show_wordcloud">
+        <option value="True" <?php if ($show_wordcloud!=True) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
+        <option value="False" <?php if ($show_wordcloud!=False) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="title">Word Count Limit</label>
+      <input type="number" class="form-control" id="wordcount_limit" name="wordcount_limit" value="<?php echo $wordcount_limit; ?>" required>
     </div>
     <button type="submit" id="submitbtn" class="btn btn-default">Save</button>
   </form>

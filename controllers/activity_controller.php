@@ -28,9 +28,12 @@
       $lis_outcome_service_url = encrypt($secret_key, $this->context_vars['lis_outcome_service_url']);
 
       $title = "";
+      $entry_title = "Journal Entry";
       $introtext = "";
       $feedback = "";
       $type = "";
+      $show_wordcloud = 1;
+      $wordcount_limit = 0;
       $activityobj = $db->read('activity', $activity_id)->fetch();
       $message = "";
       $studentresponse = "";
@@ -42,9 +45,12 @@
         }
         else {
           $title = $activityobj->title;
+          $entry_title = $activityobj->entry_title;
           $introtext = $activityobj->introtext;
           $feedback = $activityobj->feedback;
           $type = $activityobj->type;
+          $show_wordcloud = $activityobj->show_wordcloud;
+          $wordcount_limit = $activityobj->wordcount_limit;
         }
       }
       catch(Exception $e) {
@@ -84,12 +90,13 @@
 
       $ctx = 1;
       $user_id = $this->context_vars['user_id'];
+      $course_id = $this->context_vars['course_id'];
       $resource_link_id = $this->context_vars['resource_link_id'];
       $oauth_consumer_key = $this->context_vars['oauth_consumer_key'];
       $lis_result_sourcedid = $this->context_vars['lis_result_sourcedid'];
       $lis_outcome_service_url = $this->context_vars['lis_outcome_service_url'];
 
-      $data = array( 'activity_id' => $activity_id, 'student_id' => $user_id , 'reflectivetext' => $reflectivetext, 'dateadded' => date("Y-m-d H:i:s"));
+      $data = array( 'activity_id' => $activity_id, 'student_id' => $user_id , 'course_id'=>$course_id, 'reflectivetext' => $reflectivetext, 'dateadded' => date("Y-m-d H:i:s"));
 
       if ($response_id!=-1)
       {
@@ -126,7 +133,7 @@
         $lti_vars = array('lis_result_sourcedid'=>$lis_result_sourcedid, 'oauth_consumer_key'=>$oauth_consumer_key, 'oauth_consumer_secret'=>$oauth_consumer_secret, 'lis_outcome_service_url'=>$lis_outcome_service_url);
         send_grade2($grade,$lti_vars);
       }
-      
+
       $journalentries = array();
       $tags = "[]";
 
@@ -140,8 +147,27 @@
     public function results() {
       $db = Db::instance();
 
+      $activity_id = $this->context_vars['activity_id'];
       $user_id = $this->context_vars['user_id'];
+      $course_id = $this->context_vars['course_id'];
+      $activity_displaytype = $this->context_vars['activity_displaytype'];
+
+      include ('config.php');
+      $secret_key = $config['secret_key'];
+
+      $ctx = 1;
+      $current_role = $this->context_vars['roles'];
+      $roles = encrypt($secret_key, $this->context_vars['roles']);
+      //print_r("roles:");
+      //print_r($roles);
+      $resource_link_id = encrypt($secret_key, $this->context_vars['resource_link_id']);
+      $oauth_consumer_key = encrypt($secret_key, $this->context_vars['oauth_consumer_key']);
+      $lis_result_sourcedid = encrypt($secret_key, $this->context_vars['lis_result_sourcedid']);
+      $lis_outcome_service_url = encrypt($secret_key, $this->context_vars['lis_outcome_service_url']);
+
       $activity_ids = $this->context_vars['activities_to_include'];
+
+      $show_wordcloud = 0;
 
       $journalentries = array();
       $tags = "";

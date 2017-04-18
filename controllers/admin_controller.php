@@ -26,11 +26,14 @@
 
       $title = "";
       $introtext = "";
+      $entry_title = "Journal Entry";
       $feedback = "";
       $type = "text";
       $grade = 0;
       $activityobj = $db->read( 'activity', $activity_id)->fetch();
       $message = "";
+      $show_wordcloud = True;
+      $wordcount_limit = 0;
       $admin_msg = '<p>You have “Staff” access to this course and can edit the text of this activity. Please view the live version and switch to a student role to view the activity as a student.</br>This LTI tool can be used and customised in multiple edX course locations. A unique activity_id is required and must be set in Custom Parameters within the Edit LTI Block screen. When creating a new AB Split Poll activity, set the activity_id to –1 (e.g. [“activity_id=-1”]). The add/edit activity screen will be displayed where you can add a title, intro screen and final screens. Once the activity is saved a new activity_id will be displayed. The new activity_id should be updated in Custom Parameters within the Edit LTI Block screen (e.g. ["activity_id=7”]).</p>';
 
       try {
@@ -41,9 +44,12 @@
     		}
     		else {
           $title = $activityobj->title;
+          $entry_title = $activityobj->$entry_title;
           $introtext = $activityobj->introtext;
           $feedback = $activityobj->feedback;
           $type = $activityobj->type;
+          $show_wordcloud = $activityobj->show_wordcloud;
+          $wordcount_limit = $activityobj->wordcount_limit;
     		}
     	}
     	catch(Exception $e) {
@@ -64,11 +70,19 @@
       $lis_result_sourcedid = $this->context_vars['lis_result_sourcedid'];
 
       $title = $_POST['title'];
+      $entry_title = $_POST['entry_title'];
       $introtext = $_POST['introtext'];
       $feedback = $_POST['feedback'];
       $type = $_POST['type'];
+      $show_wordcloud_str = $_POST['show_wordcloud'];
+      $wordcount_limit = $_POST['wordcount_limit'];
+      $show_wordcloud = False;
+      if ($show_wordcloud_str=="True")
+      {
+        $show_wordcloud = True;
+      }
 
-      $data = array( 'title' => $title, 'introtext' => $introtext, 'feedback' => $feedback, 'type' => $type);
+      $data = array('title' => $title, 'entry_title' => $entry_title, 'introtext' => $introtext, 'feedback' => $feedback, 'type' => $type, 'show_wordcloud' => $show_wordcloud, 'wordcount_limit' => $wordcount_limit);
       if ($activity_id!=-1)
       {
         $data['activity_id'] = $activity_id;
