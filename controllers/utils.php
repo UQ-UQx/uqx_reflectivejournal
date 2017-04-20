@@ -143,7 +143,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
   // Download the file:
   header('Content-Description: File Transfer');
   header('Content-Type: application/octet-stream');
-  header('Content-Disposition: attachment; filename=reflectivejournal.docx');
+  header('Content-Disposition: attachment; filename=labreport.docx');
   header('Content-Transfer-Encoding: binary');
   header('Expires: 0');
   header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

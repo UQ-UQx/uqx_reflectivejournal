@@ -30,7 +30,10 @@
       $ltidata = $lti->calldata();
       $context_vars['activity_id'] = $ltidata['custom_activity_id'];
       $context_vars['activity_displaytype'] = $ltidata['custom_activity_displaytype'];
-      $context_vars['activities_to_include'] = $ltidata['custom_activities_to_include'];
+      $context_vars['activities_to_include'] = "";
+      if (isset($ltidata['custom_activities_to_include'])){
+        $context_vars['activities_to_include'] = $ltidata['custom_activities_to_include'];
+      }
       $context_vars['roles'] = $ltidata['roles'];
       $context_vars['custom_activity_displaytype'] = $ltidata['custom_activity_displaytype'];
       $context_vars['custom_activity_id'] = $ltidata['custom_activity_id'];
@@ -83,13 +86,14 @@
   if ($use_dummydata == True)
   {
     // Test data
-    $activityId = 2;
-    //$userRoles = 'Student';
-    $userRoles = 'Instructor';
-    $userId = 46;
+    $activityId = 5;
+    $userRoles = 'Student';
+    //$userRoles = 'Instructor';
+    $userId = 48;
     $activity_displaytype = 'learnerinput';
     //$activity_displaytype = 'results';
-    $activities_to_include = '2';
+    $activity_displaytype = 'showentry';
+    $activities_to_include = '5';
 
     $context_vars['activity_id'] = $activityId;
     $context_vars['roles'] = $userRoles;
@@ -111,6 +115,10 @@
     if ($activity_displaytype=="results")
     {
       $action = 'results';
+    }
+    if ($activity_displaytype=="showentry")
+    {
+      $action = 'showentry';
     }
     elseif (isset($_GET['action'])) {
       $action = $_GET['action'];
@@ -148,8 +156,12 @@
   }
 
   // If format is not json (i.e., not an ajax call then only render routes.php)
-  if ($format == 'json')
+  if ($format == 'json' or $format == 'word')
   {
+    if ($format=='word')
+     {
+        $action = "downloadword";
+     }
     require_once('routes.php');
   }
   else {

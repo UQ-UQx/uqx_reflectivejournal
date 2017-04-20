@@ -26,6 +26,7 @@
 
       $title = "";
       $introtext = "";
+      $reviewintro = "";
       $entry_title = "Journal Entry";
       $feedback = "";
       $type = "text";
@@ -44,8 +45,9 @@
     		}
     		else {
           $title = $activityobj->title;
-          $entry_title = $activityobj->$entry_title;
+          $entry_title = $activityobj->entry_title;
           $introtext = $activityobj->introtext;
+          $reviewintro = $activityobj->reviewintro;
           $feedback = $activityobj->feedback;
           $type = $activityobj->type;
           $show_wordcloud = $activityobj->show_wordcloud;
@@ -72,6 +74,7 @@
       $title = $_POST['title'];
       $entry_title = $_POST['entry_title'];
       $introtext = $_POST['introtext'];
+      $reviewintro = $_POST['reviewintro'];
       $feedback = $_POST['feedback'];
       $type = $_POST['type'];
       $show_wordcloud_str = $_POST['show_wordcloud'];
@@ -82,7 +85,7 @@
         $show_wordcloud = True;
       }
 
-      $data = array('title' => $title, 'entry_title' => $entry_title, 'introtext' => $introtext, 'feedback' => $feedback, 'type' => $type, 'show_wordcloud' => $show_wordcloud, 'wordcount_limit' => $wordcount_limit);
+      $data = array('title' => $title, 'entry_title' => $entry_title, 'introtext' => $introtext, 'reviewintro' => $reviewintro, 'feedback' => $feedback, 'type' => $type, 'show_wordcloud' => $show_wordcloud, 'wordcount_limit' => $wordcount_limit);
       if ($activity_id!=-1)
       {
         $data['activity_id'] = $activity_id;

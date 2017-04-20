@@ -30,6 +30,7 @@
       $title = "";
       $entry_title = "Journal Entry";
       $introtext = "";
+      $reviewintro = "";
       $feedback = "";
       $type = "";
       $show_wordcloud = 1;
@@ -47,6 +48,7 @@
           $title = $activityobj->title;
           $entry_title = $activityobj->entry_title;
           $introtext = $activityobj->introtext;
+          $reviewintro = $activityobj->reviewintro;
           $feedback = $activityobj->feedback;
           $type = $activityobj->type;
           $show_wordcloud = $activityobj->show_wordcloud;
@@ -78,6 +80,10 @@
       $tags = get_tagcloud($journalentries);
 
       require_once('views/activity/learnerinput.php');
+    }
+
+    public function showentry() {
+      $this->learnerinput();
     }
 
     public function save() {
@@ -185,7 +191,8 @@
     public function downloadword() {
       $db = Db::instance();
       $user_id = $this->context_vars['user_id'];
-      $activity_ids = $this->context_vars['activities_to_include'];
+      //$activity_ids = $this->context_vars['activities_to_include'];
+      $activity_ids = $_POST['activities_to_include'];
       buildandexport_word($db, $user_id, $activity_ids);
     }
   }

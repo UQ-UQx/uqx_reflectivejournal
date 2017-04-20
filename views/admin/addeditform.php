@@ -50,6 +50,10 @@
       <textarea class="form-control" rows="3" id="introtext" name="introtext" required><?php echo $introtext; ?></textarea>
     </div>
     <div class="form-group">
+      <label for="reviewintro">Review Text</label>
+      <textarea class="form-control" rows="3" id="reviewintro" name="reviewintro"><?php echo $reviewintro; ?></textarea>
+    </div>
+    <div class="form-group">
       <label for="feedback">Feedback</label> (* required)
       <textarea class="form-control" rows="3" name="feedback" id="feedback" required><?php echo $feedback; ?></textarea>
     </div>

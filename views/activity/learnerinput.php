@@ -20,12 +20,23 @@
     </div>
   </div>
 <?php } ?>
-
-<h2><img src="www/img/writing.png"  alt="Journal Icon" width="53" height="40"/><?php echo $title; ?></h2>
+<div style="background-color:#00aeef;">
+<h2 style="color:white"><img src="www/img/writing.png"  alt="Journal Icon" width="53" height="40"/><?php echo $title; ?></h2>
+</div>
+<?php if ($activity_displaytype=="learnerinput") { ?>
 <p><?php echo $introtext; ?></p>
+<?php } ?>
+<?php if ($activity_displaytype=="showentry") { ?>
+<p><?php echo $reviewintro; ?></p>
+<?php } ?>
 
 <div class="row">
+<?php if ($show_wordcloud==1) { ?>
 <div class="col-sm-8">
+<?php } ?>
+<?php if ($show_wordcloud==0) { ?>
+<div class="col-sm-12">
+<?php } ?>
     <div class="panel panel-default">
       <div class="panel-heading"><?php echo $entry_title; ?></div>
       <div class="panel-body">
