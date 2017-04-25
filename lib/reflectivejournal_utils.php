@@ -71,26 +71,46 @@ function get_journaldetails($db, $activity_id)
 }
 
 function get_journalentries($db, $student_id, $activity_ids){
-    $select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id IN (:activity_ids)', array( 'student_id' => $student_id, 'activity_ids' => $activity_ids  ) );
+		//todo: IN statement in query not returning all records using current db lib
+    //$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id IN (:activity_ids)', array( 'student_id' => $student_id, 'activity_ids' => $activity_ids  ) );
+		//$sql = "SELECT * FROM studentresponse WHERE student_id ='". $student_id ."' AND activity_id IN (". $activity_ids .")";
+		/*
+		$select = $db->raw( $sql);
 		$journalentries = array();
     while ( $row = $select->fetch() ) {
+			print_r($row->activity_id);
       $title = get_journaldetails($db, $row->activity_id);
       $entry = array('activity_id'=>$row->activity_id, 'title'=>$title, 'reflectivetext'=>$row->reflectivetext);
       array_push($journalentries, $entry);
     }
+		print_r($journalentries);
     return $journalentries;
+		*/
+		$activity_ids_array = explode(",", $activity_ids);
+		$journalentries = array();
+		foreach ($activity_ids_array as &$id)
+		{
+			$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id = :id', array( 'student_id' => $student_id, 'id' => $id  ) );
+			while ( $row = $select->fetch() ) {
+	      $title = get_journaldetails($db, $row->activity_id);
+	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$title, 'reflectivetext'=>$row->reflectivetext);
+	      array_push($journalentries, $entry);
+	    }
+		}
+		return $journalentries;
 }
+
 
 function buildandexport_word($db, $student_id, $activity_ids){
 
   // Load the files we need:
-  require_once 'htmltodocx_0_6_5_alpha/phpword/PHPWord.php';
-  require_once 'htmltodocx_0_6_5_alpha/simplehtmldom/simple_html_dom.php';
-  require_once 'htmltodocx_0_6_5_alpha/htmltodocx_converter/h2d_htmlconverter.php';
-  require_once 'htmltodocx_0_6_5_alpha/example_files/styles.inc';
+  require_once 'lib/htmltodocx_0_6_5_alpha/phpword/PHPWord.php';
+  require_once 'lib/htmltodocx_0_6_5_alpha/simplehtmldom/simple_html_dom.php';
+  require_once 'lib/htmltodocx_0_6_5_alpha/htmltodocx_converter/h2d_htmlconverter.php';
+  require_once 'lib/htmltodocx_0_6_5_alpha/example_files/styles.inc';
 
   // Functions to support this example.
-  require_once 'htmltodocx_0_6_5_alpha/documentation/support_functions.inc';
+  require_once 'lib/htmltodocx_0_6_5_alpha/documentation/support_functions.inc';
 
   // HTML fragment we want to parse:
   $entries_array = get_journalentries($db, $student_id, $activity_ids);
@@ -162,7 +182,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
   // Download the file:
   header('Content-Description: File Transfer');
   header('Content-Type: application/octet-stream');
-  header('Content-Disposition: attachment; filename=reflectivejournal.docx');
+  header('Content-Disposition: attachment; filename=labreport_draft.docx');
   header('Content-Transfer-Encoding: binary');
   header('Expires: 0');
   header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

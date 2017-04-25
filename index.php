@@ -92,7 +92,7 @@
     $userId = 48;
     $activity_displaytype = 'learnerinput';
     //$activity_displaytype = 'results';
-    $activity_displaytype = 'showentry';
+    //$activity_displaytype = 'showentry';
     $activities_to_include = '5';
 
     $context_vars['activity_id'] = $activityId;
@@ -116,12 +116,12 @@
     {
       $action = 'results';
     }
-    if ($activity_displaytype=="showentry")
-    {
-      $action = 'showentry';
-    }
     elseif (isset($_GET['action'])) {
       $action = $_GET['action'];
+    }
+    elseif ($activity_displaytype=="showentry")
+    {
+      $action = 'showentry';
     }
     else{
       $action = 'learnerinput';

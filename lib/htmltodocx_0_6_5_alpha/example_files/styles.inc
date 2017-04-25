@@ -5,20 +5,20 @@
 // to asign PHPWord styles to HTML elements, classes, and inline
 // styles.
 function htmltodocx_styles_example() {
-  
-  // Set of default styles - 
+
+  // Set of default styles -
   // to set initially whatever the element is:
   // NB - any defaults not set here will be provided by PHPWord.
-  $styles['default'] = 
+  $styles['default'] =
     array (
       'size' => 11,
     );
-  
+
   // Element styles:
   // The keys of the elements array are valid HTML tags;
   // The arrays associated with each of these tags is a set
   // of PHPWord style definitions.
-  $styles['elements'] = 
+  $styles['elements'] =
     array (
       'h1' => array (
         'bold' => TRUE,
@@ -60,7 +60,7 @@ function htmltodocx_styles_example() {
       'sup' => array (
         'superScript' => TRUE,
         'size' => 6,
-        ), // Superscript not working in PHPWord 
+        ), // Superscript not working in PHPWord
       'u' => array (
         'underline' => PHPWord_Style_Font::UNDERLINE_SINGLE,
         ),
@@ -72,7 +72,7 @@ function htmltodocx_styles_example() {
         // Note that applying a table style in PHPWord applies the relevant style to
         // ALL the cells in the table. So, for example, the borderSize applied here
         // applies to all the cells, and not just to the outer edges of the table:
-        'borderColor' => '000000',  
+        'borderColor' => '000000',
         'borderSize' => 10,
         ),
       'th' => array (
@@ -84,14 +84,14 @@ function htmltodocx_styles_example() {
         'borderSize' => 10,
         ),
       );
-      
+
   // Classes:
   // The keys of the classes array are valid CSS classes;
   // The array associated with each of these classes is a set
   // of PHPWord style definitions.
   // Classes will be applied in the order that they appear here if
   // more than one class appears on an element.
-  $styles['classes'] = 
+  $styles['classes'] =
     array (
       'underline' => array (
         'underline' => PHPWord_Style_Font::UNDERLINE_SINGLE,
@@ -103,11 +103,11 @@ function htmltodocx_styles_example() {
         'color' => '00A500',
        ),
       );
-  
+
   // Inline style definitions, of the form:
   // array(css attribute-value - separated by a colon and a single space => array of
-  // PHPWord attribute value pairs.    
-  $styles['inline'] = 
+  // PHPWord attribute value pairs.
+  $styles['inline'] =
     array(
       'text-decoration: underline' => array (
         'underline' => PHPWord_Style_Font::UNDERLINE_SINGLE,
@@ -121,7 +121,16 @@ function htmltodocx_styles_example() {
       'vertical-align: right' => array (
         'align' => 'right',
       ),
+      'text-align: left' => array (
+        'align' => 'left',
+      ),
+      'text-align: center' => array (
+        'align' => 'center',
+      ),
+      'text-align: right' => array (
+        'align' => 'right',
+      ),
     );
-    
+
   return $styles;
 }
