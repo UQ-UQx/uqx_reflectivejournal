@@ -41,8 +41,14 @@
       $context_vars['user_id'] = $ltidata['user_id'];
       $context_vars['resource_link_id'] = $ltidata['resource_link_id'];
       $context_vars['oauth_consumer_key'] = $ltidata['oauth_consumer_key'];
-      $context_vars['lis_result_sourcedid'] = $ltidata['lis_result_sourcedid'];
-      $context_vars['lis_outcome_service_url'] = $ltidata['lis_outcome_service_url'];
+      $context_vars['lis_result_sourcedid'] = "";
+      if (isset($ltidata['lis_result_sourcedid'])){
+        $context_vars['lis_result_sourcedid'] = $ltidata['lis_result_sourcedid'];
+      }
+      $context_vars['lis_outcome_service_url'] = "";
+      if (isset($ltidata['lis_outcome_service_url'])){
+        $context_vars['lis_outcome_service_url'] = $ltidata['lis_outcome_service_url'];
+      }
     }
   }
   elseif (isset($_POST['ctx'])){

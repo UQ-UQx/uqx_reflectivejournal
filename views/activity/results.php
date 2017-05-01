@@ -26,21 +26,27 @@
 				No reflections were saved.
 			<?php }
 			      else {
-							 foreach ($journalentries as $entry): ?>
-							 <div class="panel panel-default">
-								 <div class="panel-heading">
-									 <h4 class="panel-title">
-										 <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $entry['activity_id'] ?>">
-										 <?php echo $entry['title'] ?></a>
-									 </h4>
-								 </div>
-								 <div id="collapse<?php echo $entry['activity_id'] ?>" class="panel-collapse collapse">
-									 <div class="panel-body"><?php echo htmlspecialchars_decode($entry['reflectivetext']) ?></div>
-								 </div>
-							 </div>
+						?>
+						<div class="panel panel-default">
+							<div class="panel-body">
+							 <?php foreach ($journalentries as $entry): ?>
 
+									 <?php if ($entry['show_titleinexport']==1) { ?>
+										 <h4 class="panel-title">
+											 <?php
+											 if ($entry['export_title']!=""){
+												echo $entry['export_title'];
+											 }
+											 else {
+												 echo $entry['title'];
+											 }
+											 ?>
+										 </h4>
+									 <?php } ?>
+									 <?php echo htmlspecialchars_decode($entry['reflectivetext']) ?>
 							<?php endforeach ?>
-
+						</div>
+					</div>
 			<?php }?>
 		</div>
 

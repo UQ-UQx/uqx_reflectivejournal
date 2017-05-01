@@ -64,11 +64,22 @@
       </select>
     </div>
     <div class="form-group">
-      <label for="show_wordcloud">Show Word Cloud:</label>
+      <label for="show_wordcloud">Show Word Cloud: <?php echo $show_wordcloud; ?></label>
       <select class="form-control" id="show_wordcloud" name="show_wordcloud">
-        <option value="True" <?php if ($show_wordcloud!=True) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
-        <option value="False" <?php if ($show_wordcloud!=False) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
+        <option value="True" <?php if ($show_wordcloud==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
+        <option value="False" <?php if ($show_wordcloud==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
       </select>
+    </div>
+    <div class="form-group">
+      <label for="show_titleinexport">Include Title when Exported:<?php echo $show_titleinexport; ?></label>
+      <select class="form-control" id="show_titleinexport" name="show_titleinexport">
+        <option value="True" <?php if ($show_titleinexport==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
+        <option value="False" <?php if ($show_titleinexport==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="export_title">Export Title</label>
+      <input type="input" class="form-control" id="export_title" name="export_title" value="<?php echo $export_title; ?>">
     </div>
     <div class="form-group">
       <label for="title">Word Count Limit</label>

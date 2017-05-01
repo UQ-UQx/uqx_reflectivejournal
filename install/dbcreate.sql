@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: Apr 20, 2017 at 01:54 AM
+-- Generation Time: May 01, 2017 at 02:44 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -30,6 +30,8 @@ CREATE TABLE `activity` (
   `feedback` text NOT NULL,
   `type` varchar(500) NOT NULL,
   `show_wordcloud` tinyint(1) NOT NULL,
+  `show_titleinexport` tinyint(1) NOT NULL,
+  `export_title` varchar(1000) NOT NULL,
   `wordcount_limit` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

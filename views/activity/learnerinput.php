@@ -21,7 +21,7 @@
   </div>
 <?php } ?>
 <div style="background-color:#00aeef;">
-<h2 style="color:white"><img src="www/img/writing.png"  alt="Journal Icon" width="53" height="40"/><?php echo $title; ?></h2>
+<h3 style="color:white"><img src="www/img/writing.png"  alt="Journal Icon" width="53" height="40"/><?php echo $title; ?></h3>
 </div>
 <?php if ($activity_displaytype=="learnerinput") { ?>
 <p><?php echo $introtext; ?></p>
@@ -127,11 +127,12 @@
               var entered_text = $('#summernote').summernote('code');
               entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
 
-              console.log(entered_text);
+              //console.log(entered_text);
               entered_text = entered_text.replace(/(<([^>]+)>)/ig, "").replace(/( )/, " ");
-              console.log(entered_text);
+              //console.log(entered_text);
               var word_count = count_words(entered_text);
               update_wordcount_dsp(word_count);
+              $('#feedback_container').hide();
        });
 
       var frm = $('#inputresponseform');
