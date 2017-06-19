@@ -85,6 +85,17 @@
       <label for="title">Word Count Limit</label>
       <input type="number" class="form-control" id="wordcount_limit" name="wordcount_limit" value="<?php echo $wordcount_limit; ?>" required>
     </div>
+    <div class="form-group">
+      <label for="show_wordcount">Show Word Count:<?php echo $show_wordcount; ?></label>
+      <select class="form-control" id="show_wordcount" name="show_wordcount">
+        <option value="True" <?php if ($show_wordcount==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
+        <option value="False" <?php if ($show_wordcount==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="title">Text Editor Height</label>
+      <input type="number" class="form-control" id="height" name="height" value="<?php echo $height; ?>" required>
+    </div>
     <button type="submit" id="submitbtn" class="btn btn-default">Save</button>
   </form>
 </div>

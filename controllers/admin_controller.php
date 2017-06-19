@@ -35,8 +35,10 @@
       $message = "";
       $show_wordcloud = 1;
       $show_titleinexport = 1;
+      $show_wordcount = 0;
       $wordcount_limit = 0;
       $export_title = "";
+      $height = 400;
       $admin_msg = '<p>You have “Staff” access to this course and can edit the text of this activity. Please view the live version and switch to a student role to view the activity as a student.</br>This LTI tool can be used and customised in multiple edX course locations. A unique activity_id is required and must be set in Custom Parameters within the Edit LTI Block screen. When creating a new AB Split Poll activity, set the activity_id to –1 (e.g. [“activity_id=-1”]). The add/edit activity screen will be displayed where you can add a title, intro screen and final screens. Once the activity is saved a new activity_id will be displayed. The new activity_id should be updated in Custom Parameters within the Edit LTI Block screen (e.g. ["activity_id=7”]).</p>';
 
       try {
@@ -55,7 +57,9 @@
           $show_wordcloud = $activityobj->show_wordcloud;
           $show_titleinexport = $activityobj->show_titleinexport;
           $wordcount_limit = $activityobj->wordcount_limit;
+          $show_wordcount = $activityobj->show_wordcount;
           $export_title = $activityobj->export_title;
+          $height = $activityobj->height;
     		}
     	}
     	catch(Exception $e) {
@@ -83,9 +87,11 @@
       $type = $_POST['type'];
       $show_wordcloud_str = $_POST['show_wordcloud'];
       $show_titleinexport_str = $_POST['show_titleinexport'];
+      $show_wordcount_str =$_POST['show_wordcount'];
       $wordcount_limit = $_POST['wordcount_limit'];
-      $show_wordcloud = 0;
+      $height = $_POST['height'];
       $export_title = $_POST['export_title'];
+      $show_wordcloud = 0;
       if ($show_wordcloud_str=="True")
       {
         $show_wordcloud = 1;
@@ -95,7 +101,12 @@
       {
         $show_titleinexport = 1;
       }
-      $data = array('title' => $title, 'entry_title' => $entry_title, 'introtext' => $introtext, 'reviewintro' => $reviewintro, 'feedback' => $feedback, 'type' => $type, 'show_wordcloud' => $show_wordcloud, 'show_titleinexport' => $show_titleinexport, 'export_title' => $export_title, 'wordcount_limit' => $wordcount_limit);
+      $show_wordcount = 0;
+      if ($show_wordcount_str=="True")
+      {
+        $show_wordcount = 1;
+      }
+      $data = array('title' => $title, 'entry_title' => $entry_title, 'introtext' => $introtext, 'reviewintro' => $reviewintro, 'feedback' => $feedback, 'type' => $type, 'show_wordcloud' => $show_wordcloud, 'show_titleinexport' => $show_titleinexport, 'export_title' => $export_title, 'wordcount_limit' => $wordcount_limit, 'show_wordcount'=>$show_wordcount, 'height' => $height);
       if ($activity_id!=-1)
       {
         $data['activity_id'] = $activity_id;

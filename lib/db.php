@@ -126,7 +126,7 @@ class Db {
 	 * @return string Latest SQL query
 	 */
 	public function __toString () {
-		return $this->result ? 
+		return $this->result ?
 			$this->result->queryString :
 			null;
 	}
@@ -164,11 +164,11 @@ class Db {
 	 * Execute SQL select query
 	 * @uses   PDO::query
 	 * @throw  PDOException
-	 * @param  string       $table  
-	 * @param  string|array $fields [Optional] 
-	 * @param  string|array $where  [Optional] 
-	 * @param  string       $order  [Optional] 
-	 * @param  string|int   $limit  [Optional] 
+	 * @param  string       $table
+	 * @param  string|array $fields [Optional]
+	 * @param  string|array $where  [Optional]
+	 * @param  string       $order  [Optional]
+	 * @param  string|int   $limit  [Optional]
 	 * @return Db     Self instance
 	 * @todo   Need complete review
 	 */
@@ -233,8 +233,8 @@ class Db {
 	 * Format query parameters
 	 * @uses   self::_escape
 	 * @param  string|array $data     Data to format
-	 * @param  string       $operator [Optional] 
-	 * @param  string       $glue     [Optional] 
+	 * @param  string       $operator [Optional]
+	 * @param  string       $glue     [Optional]
 	 * @return string       SQL params query chunk
 	 * @todo   Handle integer keys like in self::_conditions
 	 */
@@ -298,7 +298,7 @@ class Db {
 				$condition = $param;
 			$sql[] = $condition;
 		}
-		return (object) array( 
+		return (object) array(
 			'sql'    => '( ' . implode( ' ) AND ( ', $sql ) . ' )',
 			'params' => $params
 		);
@@ -309,7 +309,7 @@ class Db {
 			$this->_database( $table )  . '.' . self::_extract( $table, 'table' );
 	}
 	protected function _database ( $table = null ) {
-		return self::_extract( $table, 'database' ) ?: 
+		return self::_extract( $table, 'database' ) ?:
 			$this->info->database;
 	}
 	/* Data column helpers */
@@ -320,7 +320,7 @@ class Db {
 				$column[ $key ] = $row->{$field};
 			else if ( is_array( $row ) && isset( $row[ $field ] ) )
 				$column[ $key ] = $row[ $field ];
-			else 
+			else
 				$column[ $key ] = null;
 		return $column;
 	}
@@ -334,9 +334,9 @@ class Db {
 	public function create ( $table, array $data ) {
 		$keys = array_keys( $data );
 		$sql  = 'INSERT INTO ' . $this->_table( $table ) . ' (' . implode( ', ', $keys ) . ') VALUES (:' . implode( ', :', $keys ) . ')';
-		return $this->query( $sql, $data );  
+		return $this->query( $sql, $data );
 	}
-	//public function read ( $table, $where ) 
+	//public function read ( $table, $where )
 	public function read ( $table, $id, $key = null ) {
 		$key = $key ?: current( $this->key( $table ) );
 		$sql = 'SELECT * FROM ' . $this->_table( $table ) . ' WHERE ' . self::_params( $key );
@@ -399,19 +399,19 @@ class Db {
 		$table = $this->_table( $table, false );
 		if ( isset( $this->table[ $table ] ) )
 			return $this->table[ $table ];
-		$sql = 'SELECT 
-				`COLUMN_NAME`                                               AS `name`, 
-				`COLUMN_DEFAULT`                                            AS `default`, 
-				NULLIF( `IS_NULLABLE`, "NO" )                               AS `null`, 
-				`DATA_TYPE`                                                 AS `type`, 
-				COALESCE( `CHARACTER_MAXIMUM_LENGTH`, `NUMERIC_PRECISION` ) AS `length`, 
-				`CHARACTER_SET_NAME`                                        AS `encoding`, 
-				`COLUMN_KEY`                                                AS `key`, 
-				`EXTRA`                                                     AS `auto`, 
+		$sql = 'SELECT
+				`COLUMN_NAME`                                               AS `name`,
+				`COLUMN_DEFAULT`                                            AS `default`,
+				NULLIF( `IS_NULLABLE`, "NO" )                               AS `null`,
+				`DATA_TYPE`                                                 AS `type`,
+				COALESCE( `CHARACTER_MAXIMUM_LENGTH`, `NUMERIC_PRECISION` ) AS `length`,
+				`CHARACTER_SET_NAME`                                        AS `encoding`,
+				`COLUMN_KEY`                                                AS `key`,
+				`EXTRA`                                                     AS `auto`,
 				`COLUMN_COMMENT`                                            AS `comment`
 			FROM `INFORMATION_SCHEMA`.`COLUMNS`
-			WHERE 
-				`TABLE_SCHEMA` = ' . $this->quote( self::_database( $table ) ) . ' AND 
+			WHERE
+				`TABLE_SCHEMA` = ' . $this->quote( self::_database( $table ) ) . ' AND
 				`TABLE_NAME` = ' . $this->quote( self::_extract( $table )  ) . '
 			ORDER BY `ORDINAL_POSITION` ASC';
 		$fields = $this->db->query( $sql );
@@ -422,11 +422,11 @@ class Db {
 	/* Quote Helper */
 	public function quote ( $value ) {
 		return is_null( $value ) ?
-			'NULL' : 
+			'NULL' :
 			$this->db->quote( $value );
 	}
 	public function database ( $table = null ) {
-		return $this->_table( $table, true ) ?: 
+		return $this->_table( $table, true ) ?:
 			$this->info->database;
 	}
 	/* Statement infos */
@@ -435,7 +435,7 @@ class Db {
 		return $this->db->lastInsertId();
 	}
 	public function count () {
-		return $this->result ? 
+		return $this->result ?
 			$this->result->rowCount() :
 			null;
 	}

@@ -55,7 +55,9 @@
           <input type="hidden" id="response_id" name="response_id" value="<?php echo $response_id; ?>">
           <div class="form-group" >
             <div id="summernote"><?php echo $reflectivetext; ?></div>
+            <?php if ($show_wordcount==1) { ?>
             <p>Total word count: <span id="display_count">0</span> words. Words left: <span id="word_left"><?php echo $wordcount_limit; ?></span></p>
+            <?php } ?>
             <input type="hidden" name="reflectivetext" id="reflectivetext" />
             <!--<textarea class="form-control" rows="15" name="reflectivetext" id="reflectivetext" required></textarea>-->
             <span class="help-block with-errors"></span>
@@ -110,7 +112,7 @@
       //$('#summernote').summernote();
 
       $('#summernote').summernote({
-        height: 400,
+        height: <?php echo $height; ?>,
         toolbar: [
           // [groupName, [list of button]]
           ['style', ['bold', 'italic', 'clear']],
@@ -124,14 +126,14 @@
       $('#summernote').on('summernote.keyup', function (e)
       {
               //console.log($('#summernote').summernote('code'));
-              var entered_text = $('#summernote').summernote('code');
-              entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
+              //var entered_text = $('#summernote').summernote('code');
+              //entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
 
               //console.log(entered_text);
-              entered_text = entered_text.replace(/(<([^>]+)>)/ig, "").replace(/( )/, " ");
+              //entered_text = entered_text.replace(/(<([^>]+)>)/ig, "").replace(/( )/, " ");
               //console.log(entered_text);
-              var word_count = count_words(entered_text);
-              update_wordcount_dsp(word_count);
+              //var word_count = count_words(entered_text);
+              //update_wordcount_dsp(word_count);
               $('#feedback_container').hide();
        });
 

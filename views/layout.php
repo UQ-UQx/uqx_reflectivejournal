@@ -27,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="www/js/summernote/summernote.css" />
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid">
 
       <div class="row">
         <div class="header clearfix">

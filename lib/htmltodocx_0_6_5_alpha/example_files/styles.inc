@@ -11,9 +11,11 @@ function htmltodocx_styles_example() {
   // NB - any defaults not set here will be provided by PHPWord.
   $styles['default'] =
     array (
-      'size' => 11,
+      'name' => 'Times New Roman',
+      'size' => 12,
+      'spacing' => 200,
     );
-
+    //
   // Element styles:
   // The keys of the elements array are valid HTML tags;
   // The arrays associated with each of these tags is a set
@@ -131,6 +133,13 @@ function htmltodocx_styles_example() {
         'align' => 'right',
       ),
     );
+/*
 
+array(
+'space' => array('before' => 360, 'after' => 280),
+'indentation' => array('left' => 540, 'right' => 120)
+)
+
+*/
   return $styles;
 }

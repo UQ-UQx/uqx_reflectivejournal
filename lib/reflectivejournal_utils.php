@@ -61,13 +61,17 @@ function get_tagcloud($journalentries)
 function get_journaldetails($db, $activity_id)
 {
   $title = "";
+	$show_titleinexport = 0;
   $activityobj = $db->read('activity', $activity_id)->fetch();
   if(!empty($activityobj)) {
     $title = $activityobj->title;
+		$show_titleinexport = $activityobj->show_titleinexport;
+		$export_title = $activityobj->export_title;
     //$introtext = $activityobj->introtext;
     //$feedback = $activityobj->feedback;
   }
-  return $title;
+	$details = array('title'=>$title, 'show_titleinexport'=>$show_titleinexport, 'export_title'=>$export_title);
+  return $details;
 }
 
 function get_journalentries($db, $student_id, $activity_ids){
@@ -92,8 +96,8 @@ function get_journalentries($db, $student_id, $activity_ids){
 		{
 			$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id = :id', array( 'student_id' => $student_id, 'id' => $id  ) );
 			while ( $row = $select->fetch() ) {
-	      $title = get_journaldetails($db, $row->activity_id);
-	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$title, 'reflectivetext'=>$row->reflectivetext);
+	      $details = get_journaldetails($db, $row->activity_id);
+	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$details['title'], 'show_titleinexport'=>$details['show_titleinexport'], 'export_title'=>$details['export_title'], 'reflectivetext'=>$row->reflectivetext);
 	      array_push($journalentries, $entry);
 	    }
 		}
@@ -118,7 +122,13 @@ function buildandexport_word($db, $student_id, $activity_ids){
   $html = "";
   foreach ($entries_array as &$entry)
   {
-    $html = $html . "<h2>" . $entry['title'] . "</h2>";
+		if ($entry['show_titleinexport']==1){
+			$title = $entry['title'];
+			if ($entry['export_title']!=""){
+				$title = $entry['export_title'];
+			}
+			$html = $html . '<h2 style="text-align: center">' . $title . '</h2>';
+		}
     $html = $html . htmlspecialchars_decode($entry['reflectivetext']);
   }
   //file_get_contents('example_files/example_html.html');
@@ -152,7 +162,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
     'base_root' => $paths['base_root'],
     'base_path' => $paths['base_path'],
     // Optional parameters - showing the defaults if you don't set anything:
-    'current_style' => array('size' => '11'), // The PHPWord style on the top element - may be inherited by descendent elements.
+    'current_style' => array('size' => '12', 'name' => 'Times New Roman',), // The PHPWord style on the top element - may be inherited by descendent elements. 'indentation' => array('firstLine' => 100)
     'parents' => array(0 => 'body'), // Our parent is body.
     'list_depth' => 0, // This is the current depth of any current list.
     'context' => 'section', // Possible values - section, footer or header.

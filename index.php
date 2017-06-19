@@ -96,8 +96,8 @@
     $userRoles = 'Student';
     //$userRoles = 'Instructor';
     $userId = 48;
-    $activity_displaytype = 'learnerinput';
-    //$activity_displaytype = 'results';
+    //$activity_displaytype = 'learnerinput';
+    $activity_displaytype = 'results';
     //$activity_displaytype = 'showentry';
     $activities_to_include = '5';
 

@@ -34,7 +34,9 @@
       $feedback = "";
       $type = "";
       $show_wordcloud = 1;
+      $show_wordcount= 1;
       $wordcount_limit = 0;
+      $wordcount_limit = 400;
       $activityobj = $db->read('activity', $activity_id)->fetch();
       $message = "";
       $studentresponse = "";
@@ -53,6 +55,8 @@
           $type = $activityobj->type;
           $show_wordcloud = $activityobj->show_wordcloud;
           $wordcount_limit = $activityobj->wordcount_limit;
+          $show_wordcount = $activityobj->show_wordcount;
+          $height = $activityobj->height;
         }
       }
       catch(Exception $e) {

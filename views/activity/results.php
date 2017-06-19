@@ -28,11 +28,11 @@
 			      else {
 						?>
 						<div class="panel panel-default">
-							<div class="panel-body">
+							<div class="panel-body" style="font-family: 'Times New Roman';">
 							 <?php foreach ($journalentries as $entry): ?>
 
 									 <?php if ($entry['show_titleinexport']==1) { ?>
-										 <h4 class="panel-title">
+										 <h4 class="panel-title" style="text-align: center; font-family: 'Times New Roman'; font-size: 18pt; font-weight: bold;">
 											 <?php
 											 if ($entry['export_title']!=""){
 												echo $entry['export_title'];
@@ -43,7 +43,9 @@
 											 ?>
 										 </h4>
 									 <?php } ?>
+									 <div style="font-size: 12pt; font-family: 'Times New Roman';"> <!-- text-indent: 3em;-->
 									 <?php echo htmlspecialchars_decode($entry['reflectivetext']) ?>
+								 	 </div>
 							<?php endforeach ?>
 						</div>
 					</div>

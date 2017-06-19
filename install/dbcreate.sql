@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: May 01, 2017 at 02:44 AM
+-- Generation Time: Jun 20, 2017 at 12:46 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -32,7 +32,9 @@ CREATE TABLE `activity` (
   `show_wordcloud` tinyint(1) NOT NULL,
   `show_titleinexport` tinyint(1) NOT NULL,
   `export_title` varchar(1000) NOT NULL,
-  `wordcount_limit` int(11) NOT NULL
+  `wordcount_limit` int(11) NOT NULL,
+  `show_wordcount` int(11) NOT NULL,
+  `height` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
