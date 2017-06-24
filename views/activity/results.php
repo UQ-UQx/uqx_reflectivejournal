@@ -3,7 +3,7 @@
 
 		<!--<h2>Completed Reflections</h2>-->
 		<div class="btn-group">
-			<form role="form" id="downloadword" action="?controller=activity&action=downloadword&format=word" method="post">
+			<form role="form" id="downloadword" action="?controller=activity&action=<?php if ($downloadformat=="Word") {echo "downloadword";} else {echo "downloadpdf";} ?>&format=<?php if ($downloadformat=="Word") {echo "word";} else {echo "pdf";} ?>" method="post">
 				<input type="hidden" id="activity_id" name="activity_id" value="<?php echo $activity_id; ?>">
 				<input type="hidden" id="course_id" name="course_id" value="<?php echo $course_id; ?>">
 				<input type="hidden" id="activity_displaytype" name="activity_displaytype" value="<?php echo $activity_displaytype; ?>">

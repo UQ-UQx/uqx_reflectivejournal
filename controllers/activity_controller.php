@@ -181,9 +181,11 @@
 
       $journalentries = array();
       $tags = "";
+      $downloadformat = "Word"
       try {
         $journalentries = get_journalentries($db, $user_id, $activity_ids);
         $tags = get_tagcloud($journalentries);
+        $downloadformat = $journalentries[0]['downloadformat'];
       }
       catch(Exception $e) {
         $message .= '<p>' . $e->getMessage() . '</p>';
@@ -198,6 +200,14 @@
       //$activity_ids = $this->context_vars['activities_to_include'];
       $activity_ids = $_POST['activities_to_include'];
       buildandexport_word($db, $user_id, $activity_ids);
+    }
+
+    public function downloadpdf() {
+      $db = Db::instance();
+      $user_id = $this->context_vars['user_id'];
+      //$activity_ids = $this->context_vars['activities_to_include'];
+      $activity_ids = $_POST['activities_to_include'];
+      buildandexport_pdf($db, $user_id, $activity_ids);
     }
   }
 ?>

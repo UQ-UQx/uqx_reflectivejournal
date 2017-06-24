@@ -67,10 +67,12 @@ function get_journaldetails($db, $activity_id)
     $title = $activityobj->title;
 		$show_titleinexport = $activityobj->show_titleinexport;
 		$export_title = $activityobj->export_title;
+		$downloadfilename = $activityobj->downloadfilename;
+		$downloadformat = $activityobj->downloadformat;
     //$introtext = $activityobj->introtext;
     //$feedback = $activityobj->feedback;
   }
-	$details = array('title'=>$title, 'show_titleinexport'=>$show_titleinexport, 'export_title'=>$export_title);
+	$details = array('title'=>$title, 'show_titleinexport'=>$show_titleinexport, 'export_title'=>$export_title, 'downloadfilename'=>$downloadfilename, 'downloadformat'=>$downloadformat);
   return $details;
 }
 
@@ -97,7 +99,7 @@ function get_journalentries($db, $student_id, $activity_ids){
 			$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id = :id', array( 'student_id' => $student_id, 'id' => $id  ) );
 			while ( $row = $select->fetch() ) {
 	      $details = get_journaldetails($db, $row->activity_id);
-	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$details['title'], 'show_titleinexport'=>$details['show_titleinexport'], 'export_title'=>$details['export_title'], 'reflectivetext'=>$row->reflectivetext);
+	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$details['title'], 'show_titleinexport'=>$details['show_titleinexport'], 'export_title'=>$details['export_title'], 'downloadfilename'=>$details['downloadfilename'], 'reflectivetext'=>$row->reflectivetext);
 	      array_push($journalentries, $entry);
 	    }
 		}
@@ -120,6 +122,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
   $entries_array = get_journalentries($db, $student_id, $activity_ids);
 
   $html = "";
+	$downloadfilename = 'reflective_journal.docx';
   foreach ($entries_array as &$entry)
   {
 		if ($entry['show_titleinexport']==1){
@@ -130,6 +133,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
 			$html = $html . '<h2 style="text-align: center">' . $title . '</h2>';
 		}
     $html = $html . htmlspecialchars_decode($entry['reflectivetext']);
+		$downloadfilename = $entry['downloadfilename'] . 'docx';
   }
   //file_get_contents('example_files/example_html.html');
   // $html = file_get_contents('test/table.html');
@@ -192,7 +196,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
   // Download the file:
   header('Content-Description: File Transfer');
   header('Content-Type: application/octet-stream');
-  header('Content-Disposition: attachment; filename=labreport_draft.docx');
+  header('Content-Disposition: attachment; filename=' . $downloadfilename . );
   header('Content-Transfer-Encoding: binary');
   header('Expires: 0');
   header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -203,5 +207,50 @@ function buildandexport_word($db, $student_id, $activity_ids){
   $status = readfile($h2d_file_uri);
   unlink($h2d_file_uri);
   exit;
+}
+
+function buildandexport_pdf($db, $student_id, $activity_ids){
+
+  // HTML fragment we want to parse:
+  $entries_array = get_journalentries($db, $student_id, $activity_ids);
+
+  $html = "";
+	$downloadfilename = 'reflective_journal.pdf';
+  foreach ($entries_array as &$entry)
+  {
+		if ($entry['show_titleinexport']==1){
+			$title = $entry['title'];
+			if ($entry['export_title']!=""){
+				$title = $entry['export_title'];
+			}
+			$html = $html . '<h2 style="text-align: center">' . $title . '</h2>';
+		}
+    $html = $html . htmlspecialchars_decode($entry['reflectivetext']);
+		$downloadfilename = $entry['downloadfilename'] . 'pdf';
+  }
+
+  $html = '<html><body>' . $html . '</body></html>';
+
+	require_once 'dompdf/autoload.inc.php';
+
+	// reference the Dompdf namespace
+	use Dompdf\Dompdf;
+
+	// instantiate and use the dompdf class
+	$dompdf = new Dompdf();
+	$dompdf->loadHtml($html);
+
+	// (Optional) Setup the paper size and orientation
+	$dompdf->setPaper('A4', 'landscape');
+
+	// Render the HTML as PDF
+	$dompdf->render();
+
+	// Output the generated PDF to Browser
+	//$dompdf->stream();
+
+	$dompdf->stream($downloadfilename, array("Attachment" => true));
+
+	exit(0);
 }
 ?>

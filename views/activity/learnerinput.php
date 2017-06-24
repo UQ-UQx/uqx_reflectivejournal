@@ -40,6 +40,21 @@
     <div class="panel panel-default">
       <div class="panel-heading"><?php echo $entry_title; ?></div>
       <div class="panel-body">
+        <form role="form" data-toggle="validator" id="downloadform" action="?controller=activity&action=downloadpdf&format=pdf" method="post">
+          <input type="hidden" id="activity_id" name="activity_id" value="<?php echo $activity_id; ?>">
+  				<input type="hidden" id="course_id" name="course_id" value="<?php echo $course_id; ?>">
+  				<input type="hidden" id="activity_displaytype" name="activity_displaytype" value="<?php echo $activity_displaytype; ?>">
+  				<input type="hidden" id="ctx" name="ctx" value="<?php echo $ctx; ?>">
+  				<input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
+  				<input type="hidden" id="resource_link_id" name="resource_link_id" value="<?php echo $resource_link_id; ?>">
+  				<input type="hidden" id="consumer_key" name="consumer_key" value="<?php echo $oauth_consumer_key; ?>">
+  				<input type="hidden" id="lis_result_sourcedid" name="lis_result_sourcedid" value="<?php echo $lis_result_sourcedid; ?>">
+  				<input type="hidden" id="roles" name="roles" value="<?php echo $roles; ?>">
+  				<input type="hidden" id="activities_to_include" name="activities_to_include" value="<?php echo $activity_id; ?>">
+  				<input type="hidden" id="lis_outcome_service_url" name="lis_outcome_service_url" value="<?php echo $lis_outcome_service_url; ?>">
+
+          <input type="hidden" id="response_id" name="response_id" value="<?php echo $response_id; ?>">
+        </form>
         <form role="form" data-toggle="validator" id="inputresponseform" action="?controller=activity&action=save&format=json" method="post">
           <input type="hidden" id="activity_id" name="activity_id" value="<?php echo $activity_id; ?>">
           <input type="hidden" id="course_id" name="course_id" value="<?php echo $course_id; ?>">
@@ -64,6 +79,9 @@
           </div>
           <div class="btn-group">
             <button type="button" id="submitbtn" class="btn btn-primary">Save</button>
+            <?php if ($show_downloadonentry==1) { ?>
+            <button type="button" id="downloadbtn" class="btn btn-primary">Download <?php if ($downloadfilename=="Word") {echo "Word Document";} else {echo "PDF";} ?></button>
+            <?php } ?>
           </div>
         </form>
         <p></p>
@@ -126,14 +144,14 @@
       $('#summernote').on('summernote.keyup', function (e)
       {
               //console.log($('#summernote').summernote('code'));
-              //var entered_text = $('#summernote').summernote('code');
-              //entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
+              var entered_text = $('#summernote').summernote('code');
+              entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
 
               //console.log(entered_text);
-              //entered_text = entered_text.replace(/(<([^>]+)>)/ig, "").replace(/( )/, " ");
+              entered_text = entered_text.replace(/(<([^>]+)>)/ig, "").replace(/( )/, " ");
               //console.log(entered_text);
-              //var word_count = count_words(entered_text);
-              //update_wordcount_dsp(word_count);
+              var word_count = count_words(entered_text);
+              update_wordcount_dsp(word_count);
               $('#feedback_container').hide();
        });
 
@@ -145,6 +163,11 @@
         $('#wordcloud').jQCloud(tags, {'autoResize':true});
         setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip(); }, 1000);
       }
+
+      $( "#downloadbtn" ).click(function() {
+        //submit word or pdf download form
+        $( "#downloadform" ).submit();
+      };
 
       $( "#submitbtn" ).click(function() {
 

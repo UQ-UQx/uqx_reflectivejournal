@@ -96,6 +96,24 @@
       <label for="title">Text Editor Height</label>
       <input type="number" class="form-control" id="height" name="height" value="<?php echo $height; ?>" required>
     </div>
+    <div class="form-group">
+      <label for="show_wordcount">Show Word Count:<?php echo $show_downloadonentry; ?></label>
+      <select class="form-control" id="show_downloadonentry" name="show_downloadonentry">
+        <option value="True" <?php if ($show_downloadonentry==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
+        <option value="False" <?php if ($show_downloadonentry==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="type">Download Format:</label>  (* required)
+      <select class="form-control" id="downloadformat" name="downloadformat">
+        <option value="Word" <?php if ($show_downloadonentry=='Word') { ?> <?php echo "selected"; ?><?php } ?>>Word</option>
+        <option value="PDF" <?php if ($show_downloadonentry=='PDF') { ?> <?php echo "selected"; ?><?php } ?>>PDF</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="title">Download Filename</label> (* required)
+      <input type="input" class="form-control" id="downloadformat" name="downloadformat" value="<?php echo $downloadformat; ?>">
+    </div>
     <button type="submit" id="submitbtn" class="btn btn-default">Save</button>
   </form>
 </div>

@@ -20,7 +20,7 @@
   // we're adding an entry for the new controller and its actions
   $controllers = array('pages' => array('error'),
                        'admin' => array('addeditform', 'update'),
-                       'activity' => array('learnerinput', 'showentry', 'save', 'results', 'downloadword'));
+                       'activity' => array('learnerinput', 'showentry', 'save', 'results', 'downloadword', 'downloadpdf'));
 
   if (array_key_exists($controller, $controllers)) {
     if (in_array($action, $controllers[$controller])) {

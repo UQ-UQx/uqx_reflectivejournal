@@ -96,8 +96,8 @@
     $userRoles = 'Student';
     //$userRoles = 'Instructor';
     $userId = 48;
-    //$activity_displaytype = 'learnerinput';
-    $activity_displaytype = 'results';
+    $activity_displaytype = 'learnerinput';
+    //$activity_displaytype = 'results';
     //$activity_displaytype = 'showentry';
     $activities_to_include = '5';
 
@@ -162,12 +162,16 @@
   }
 
   // If format is not json (i.e., not an ajax call then only render routes.php)
-  if ($format == 'json' or $format == 'word')
+  if ($format == 'json' or $format == 'word' or $format == 'pdf')
   {
     if ($format=='word')
-     {
+    {
         $action = "downloadword";
-     }
+    }
+    else ($format=='pdf')
+    {
+         $action = "downloadpdf";
+    }
     require_once('routes.php');
   }
   else {
