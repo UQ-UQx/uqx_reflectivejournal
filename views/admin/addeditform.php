@@ -78,6 +78,13 @@
       </select>
     </div>
     <div class="form-group">
+      <label for="exportdisplay">Export Page Display:</label>
+      <select class="form-control" id="exportdisplay" name="exportdisplay">
+        <option value="Expanded" <?php if ($exportdisplay=="Expanded") { ?> <?php echo "selected"; ?><?php } ?>>Expanded</option>
+        <option value="Collapsed" <?php if ($exportdisplay=="Collapsed") { ?> <?php echo "selected"; ?><?php } ?>>Collapsed</option>
+      </select>
+    </div>
+    <div class="form-group">
       <label for="export_title">Export Title</label>
       <input type="input" class="form-control" id="export_title" name="export_title" value="<?php echo $export_title; ?>">
     </div>
@@ -97,7 +104,7 @@
       <input type="number" class="form-control" id="height" name="height" value="<?php echo $height; ?>" required>
     </div>
     <div class="form-group">
-      <label for="show_wordcount">Show Word Count:<?php echo $show_downloadonentry; ?></label>
+      <label for="show_wordcount">Show Download on Entry UI:<?php echo $show_downloadonentry; ?></label>
       <select class="form-control" id="show_downloadonentry" name="show_downloadonentry">
         <option value="True" <?php if ($show_downloadonentry==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
         <option value="False" <?php if ($show_downloadonentry==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
@@ -112,7 +119,7 @@
     </div>
     <div class="form-group">
       <label for="title">Download Filename</label> (* required)
-      <input type="input" class="form-control" id="downloadformat" name="downloadformat" value="<?php echo $downloadformat; ?>">
+      <input type="input" class="form-control" id="downloadfilename" name="downloadfilename" value="<?php echo $downloadfilename; ?>">
     </div>
     <button type="submit" id="submitbtn" class="btn btn-default">Save</button>
   </form>

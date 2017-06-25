@@ -16,7 +16,7 @@
 				<input type="hidden" id="activities_to_include" name="activities_to_include" value="<?php echo $activity_ids; ?>">
 				<input type="hidden" id="lis_outcome_service_url" name="lis_outcome_service_url" value="<?php echo $lis_outcome_service_url; ?>">
 
-				<button class="btn btn-primary" type="submit">Download Word Document</button>
+				<button class="btn btn-primary" type="submit">Download <?php if ($downloadformat=="Word") {echo "Word Document";} else {echo "PDF";} ?></button>
 			</form>
 		</div>
 		<p></p>
@@ -29,6 +29,7 @@
 						?>
 						<div class="panel panel-default">
 							<div class="panel-body" style="font-family: 'Times New Roman';">
+							<?php if ($exportdisplay=="Inline") { ?>
 							 <?php foreach ($journalentries as $entry): ?>
 
 									 <?php if ($entry['show_titleinexport']==1) { ?>
@@ -46,7 +47,25 @@
 									 <div style="font-size: 12pt; font-family: 'Times New Roman';"> <!-- text-indent: 3em;-->
 									 <?php echo htmlspecialchars_decode($entry['reflectivetext']) ?>
 								 	 </div>
+							  <?php endforeach ?>
+							<?php }
+							else {
+							?>
+							<?php foreach ($journalentries as $entry): ?>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $entry['activity_id'] ?>">
+										<?php echo $entry['title'] ?></a>
+									</h4>
+								</div>
+								<div id="collapse<?php echo $entry['activity_id'] ?>" class="panel-collapse collapse">
+									<div class="panel-body"><?php echo htmlspecialchars_decode($entry['reflectivetext']) ?></div>
+								</div>
+							</div>
+
 							<?php endforeach ?>
+							<?php } ?>
 						</div>
 					</div>
 			<?php }?>

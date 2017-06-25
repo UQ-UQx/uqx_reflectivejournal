@@ -37,6 +37,8 @@
       $show_wordcount= 1;
       $wordcount_limit = 0;
       $wordcount_limit = 400;
+      $show_downloadonentry = 0;
+      $downloadformat = "Word";
       $activityobj = $db->read('activity', $activity_id)->fetch();
       $message = "";
       $studentresponse = "";
@@ -56,6 +58,8 @@
           $show_wordcloud = $activityobj->show_wordcloud;
           $wordcount_limit = $activityobj->wordcount_limit;
           $show_wordcount = $activityobj->show_wordcount;
+          $show_downloadonentry =  $activityobj->show_downloadonentry;
+          $downloadformat = $activityobj->downloadformat;
           $height = $activityobj->height;
         }
       }
@@ -181,11 +185,15 @@
 
       $journalentries = array();
       $tags = "";
-      $downloadformat = "Word"
+      $downloadformat = "Word";
+      $exportdisplay = "Collapsed";
+
       try {
         $journalentries = get_journalentries($db, $user_id, $activity_ids);
         $tags = get_tagcloud($journalentries);
         $downloadformat = $journalentries[0]['downloadformat'];
+        $exportdisplay = $journalentries[0]['exportdisplay'];
+
       }
       catch(Exception $e) {
         $message .= '<p>' . $e->getMessage() . '</p>';

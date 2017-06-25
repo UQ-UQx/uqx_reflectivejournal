@@ -1,5 +1,9 @@
 <?php
 require_once('TagCloud.php');
+require_once 'dompdf/autoload.inc.php';
+
+// reference the Dompdf namespace
+use Dompdf\Dompdf;
 
 function remove_stop_Words($input){
 
@@ -69,29 +73,15 @@ function get_journaldetails($db, $activity_id)
 		$export_title = $activityobj->export_title;
 		$downloadfilename = $activityobj->downloadfilename;
 		$downloadformat = $activityobj->downloadformat;
+		$exportdisplay = $activityobj->exportdisplay;
     //$introtext = $activityobj->introtext;
     //$feedback = $activityobj->feedback;
   }
-	$details = array('title'=>$title, 'show_titleinexport'=>$show_titleinexport, 'export_title'=>$export_title, 'downloadfilename'=>$downloadfilename, 'downloadformat'=>$downloadformat);
+	$details = array('title'=>$title, 'show_titleinexport'=>$show_titleinexport, 'export_title'=>$export_title, 'downloadfilename'=>$downloadfilename, 'downloadformat'=>$downloadformat, 'exportdisplay'=>$exportdisplay);
   return $details;
 }
 
 function get_journalentries($db, $student_id, $activity_ids){
-		//todo: IN statement in query not returning all records using current db lib
-    //$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id IN (:activity_ids)', array( 'student_id' => $student_id, 'activity_ids' => $activity_ids  ) );
-		//$sql = "SELECT * FROM studentresponse WHERE student_id ='". $student_id ."' AND activity_id IN (". $activity_ids .")";
-		/*
-		$select = $db->raw( $sql);
-		$journalentries = array();
-    while ( $row = $select->fetch() ) {
-			print_r($row->activity_id);
-      $title = get_journaldetails($db, $row->activity_id);
-      $entry = array('activity_id'=>$row->activity_id, 'title'=>$title, 'reflectivetext'=>$row->reflectivetext);
-      array_push($journalentries, $entry);
-    }
-		print_r($journalentries);
-    return $journalentries;
-		*/
 		$activity_ids_array = explode(",", $activity_ids);
 		$journalentries = array();
 		foreach ($activity_ids_array as &$id)
@@ -99,7 +89,7 @@ function get_journalentries($db, $student_id, $activity_ids){
 			$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id = :id', array( 'student_id' => $student_id, 'id' => $id  ) );
 			while ( $row = $select->fetch() ) {
 	      $details = get_journaldetails($db, $row->activity_id);
-	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$details['title'], 'show_titleinexport'=>$details['show_titleinexport'], 'export_title'=>$details['export_title'], 'downloadfilename'=>$details['downloadfilename'], 'reflectivetext'=>$row->reflectivetext);
+	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$details['title'], 'show_titleinexport'=>$details['show_titleinexport'], 'export_title'=>$details['export_title'], 'downloadfilename'=>$details['downloadfilename'], 'downloadformat'=>$details['downloadformat'], 'exportdisplay'=>$details['exportdisplay'],  'reflectivetext'=>$row->reflectivetext);
 	      array_push($journalentries, $entry);
 	    }
 		}
@@ -196,7 +186,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
   // Download the file:
   header('Content-Description: File Transfer');
   header('Content-Type: application/octet-stream');
-  header('Content-Disposition: attachment; filename=' . $downloadfilename . );
+  header('Content-Disposition: attachment; filename=' . $downloadfilename);
   header('Content-Transfer-Encoding: binary');
   header('Expires: 0');
   header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -231,17 +221,14 @@ function buildandexport_pdf($db, $student_id, $activity_ids){
 
   $html = '<html><body>' . $html . '</body></html>';
 
-	require_once 'dompdf/autoload.inc.php';
 
-	// reference the Dompdf namespace
-	use Dompdf\Dompdf;
 
 	// instantiate and use the dompdf class
 	$dompdf = new Dompdf();
 	$dompdf->loadHtml($html);
 
 	// (Optional) Setup the paper size and orientation
-	$dompdf->setPaper('A4', 'landscape');
+	$dompdf->setPaper('A4', 'portrait');
 
 	// Render the HTML as PDF
 	$dompdf->render();
@@ -253,4 +240,5 @@ function buildandexport_pdf($db, $student_id, $activity_ids){
 
 	exit(0);
 }
+
 ?>

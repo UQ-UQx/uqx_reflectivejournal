@@ -77,12 +77,10 @@
             <!--<textarea class="form-control" rows="15" name="reflectivetext" id="reflectivetext" required></textarea>-->
             <span class="help-block with-errors"></span>
           </div>
-          <div class="btn-group">
             <button type="button" id="submitbtn" class="btn btn-primary">Save</button>
             <?php if ($show_downloadonentry==1) { ?>
-            <button type="button" id="downloadbtn" class="btn btn-primary">Download <?php if ($downloadfilename=="Word") {echo "Word Document";} else {echo "PDF";} ?></button>
+            <button type="button" id="downloadbtn" class="btn btn-primary">Download <?php if ($downloadformat=="Word") {echo "Word Document";} else {echo "PDF";} ?></button>
             <?php } ?>
-          </div>
         </form>
         <p></p>
         <div id="validation_container" class="alert alert-danger">
@@ -125,6 +123,7 @@
     $(function() {
       $('#feedback_container').hide();
       $('#validation_container').hide();
+      $('#downloadbtn').prop('disabled', true);
 
       // Render Summernote editor
       //$('#summernote').summernote();
@@ -143,6 +142,8 @@
 
       $('#summernote').on('summernote.keyup', function (e)
       {
+              $('#downloadbtn').prop('disabled', true);
+
               //console.log($('#summernote').summernote('code'));
               var entered_text = $('#summernote').summernote('code');
               entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
@@ -167,7 +168,7 @@
       $( "#downloadbtn" ).click(function() {
         //submit word or pdf download form
         $( "#downloadform" ).submit();
-      };
+      });
 
       $( "#submitbtn" ).click(function() {
 
@@ -192,6 +193,7 @@
                     $('#wordcloud').jQCloud('destroy');
                     $('#wordcloud').jQCloud(json_data['tags'], {'autoResize':true});
                   }
+                  $('#downloadbtn').prop('disabled', false);
                   setTimeout(function(){ $('[data-toggle="tooltip"]').tooltip(); }, 1000);
               }
           });

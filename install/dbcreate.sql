@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:8889
--- Generation Time: Jun 20, 2017 at 12:46 AM
+-- Generation Time: Jun 25, 2017 at 04:08 AM
 -- Server version: 5.5.42
 -- PHP Version: 7.0.0
 
@@ -34,7 +34,11 @@ CREATE TABLE `activity` (
   `export_title` varchar(1000) NOT NULL,
   `wordcount_limit` int(11) NOT NULL,
   `show_wordcount` int(11) NOT NULL,
-  `height` int(11) NOT NULL
+  `height` int(11) NOT NULL,
+  `show_downloadonentry` int(11) NOT NULL,
+  `downloadformat` varchar(100) NOT NULL,
+  `downloadfilename` varchar(1000) NOT NULL DEFAULT 'labreport_draft',
+  `exportdisplay` varchar(1000) NOT NULL DEFAULT 'Collapsed'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

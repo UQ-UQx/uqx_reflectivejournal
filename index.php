@@ -93,13 +93,13 @@
   {
     // Test data
     $activityId = 5;
-    $userRoles = 'Student';
-    //$userRoles = 'Instructor';
+    //$userRoles = 'Student';
+    $userRoles = 'Instructor';
     $userId = 48;
-    $activity_displaytype = 'learnerinput';
-    //$activity_displaytype = 'results';
+    //$activity_displaytype = 'learnerinput';
+    $activity_displaytype = 'results';
     //$activity_displaytype = 'showentry';
-    $activities_to_include = '5';
+    $activities_to_include = '5,6';
 
     $context_vars['activity_id'] = $activityId;
     $context_vars['roles'] = $userRoles;
@@ -168,7 +168,7 @@
     {
         $action = "downloadword";
     }
-    else ($format=='pdf')
+    else  if ($format=='pdf')
     {
          $action = "downloadpdf";
     }
