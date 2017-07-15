@@ -26,6 +26,6 @@
 2. Add a Review Journal Entry Activity
 - Add an LTI Consumer in edX
 - Refer to the activity_id that contains the Journal entry that must be reviewed and updated in the Custom parameters: ["activity_id=1", "activity_displaytype=showentry"]
-3 Display a Summary and Export
+3. Display a Summary and Export
 - Add an LTI Consumer in edX
 - Refer to the activity_id that contains the first Journal entry, set the activity_displaytype to results and set activities_to_include to a comma separated list of journal entries by activity_id in the Custom parameters: ["activity_id=1", "activity_displaytype=results", "activities_to_include=1,2,3"]
