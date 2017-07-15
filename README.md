@@ -17,15 +17,15 @@
 * Rename config.php.example to config.php and enter database settings and LTI keys.
 
 ## LTI Setup on edX and Embedding Modes
-* Add Journal Entry Activity in edX
-** Add an LTI Consumer in edX
-** Add the following in Custom parameters: ["activity_id=-1", "activity_displaytype=learnerinput"]
-** Save the LTI consumer_key. The Add Activity form will be displayed.
-** Enter the title, intro text, feedback and other relevant setting. Click on the Save button. The Activity ID will be updated. Copy the activity ID and update the activity_id in the Custom Parameters eg
+1. Add Journal Entry Activity in edX
+- Add an LTI Consumer in edX
+- Add the following in Custom parameters: ["activity_id=-1", "activity_displaytype=learnerinput"]
+- Save the LTI consumer_key. The Add Activity form will be displayed.
+- Enter the title, intro text, feedback and other relevant setting. Click on the Save button. The Activity ID will be updated. Copy the activity ID and update the activity_id in the Custom Parameters eg
 ["activity_id=1", "activity_displaytype=learnerinput"]
-* Add a Review Journal Entry Activity
-** Add an LTI Consumer in edX
-** Refer to the activity_id that contains the Journal entry that must be reviewed and updated in the Custom parameters: ["activity_id=1", "activity_displaytype=showentry"]
-* Display a Summary and Export
-** Add an LTI Consumer in edX
-** Refer to the activity_id that contains the first Journal entry, set the activity_displaytype to results and set activities_to_include to a comma separated list of journal entries by activity_id in the Custom parameters: ["activity_id=1", "activity_displaytype=results", "activities_to_include=1,2,3"]
+2. Add a Review Journal Entry Activity
+- Add an LTI Consumer in edX
+- Refer to the activity_id that contains the Journal entry that must be reviewed and updated in the Custom parameters: ["activity_id=1", "activity_displaytype=showentry"]
+3 Display a Summary and Export
+- Add an LTI Consumer in edX
+- Refer to the activity_id that contains the first Journal entry, set the activity_displaytype to results and set activities_to_include to a comma separated list of journal entries by activity_id in the Custom parameters: ["activity_id=1", "activity_displaytype=results", "activities_to_include=1,2,3"]
