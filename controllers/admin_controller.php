@@ -58,7 +58,7 @@
           $introtext = $activityobj->introtext;
           $reviewintro = $activityobj->reviewintro;
           $feedback = $activityobj->feedback;
-          $type = $activityobj->type;
+          $type = "text";
           $show_wordcloud = $activityobj->show_wordcloud;
           $show_titleinexport = $activityobj->show_titleinexport;
           $wordcount_limit = $activityobj->wordcount_limit;

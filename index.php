@@ -92,12 +92,12 @@
   if ($use_dummydata == True)
   {
     // Test data
-    $activityId = 5;
-    //$userRoles = 'Student';
-    $userRoles = 'Instructor';
+    $activityId = 6;
+    $userRoles = 'Student';
+    //$userRoles = 'Instructor';
     $userId = 48;
-    //$activity_displaytype = 'learnerinput';
-    $activity_displaytype = 'results';
+    $activity_displaytype = 'learnerinput';
+    //$activity_displaytype = 'results';
     //$activity_displaytype = 'showentry';
     $activities_to_include = '5,6';
 

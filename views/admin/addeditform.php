@@ -50,7 +50,7 @@
       <textarea class="form-control" rows="3" id="introtext" name="introtext" required><?php echo $introtext; ?></textarea>
     </div>
     <div class="form-group">
-      <label for="reviewintro">Review Text</label>
+      <label for="reviewintro">Review Intro Text</label>
       <textarea class="form-control" rows="3" id="reviewintro" name="reviewintro"><?php echo $reviewintro; ?></textarea>
     </div>
     <div class="form-group">
@@ -58,53 +58,47 @@
       <textarea class="form-control" rows="3" name="feedback" id="feedback" required><?php echo $feedback; ?></textarea>
     </div>
     <div class="form-group">
-      <label for="type">Select list:</label>  (* required)
-      <select class="form-control" id="type" name="type">
-        <option>Text</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="show_wordcloud">Show Word Cloud: <?php echo $show_wordcloud; ?></label>
+      <label for="show_wordcloud">Show Word Cloud: </label>
       <select class="form-control" id="show_wordcloud" name="show_wordcloud">
         <option value="True" <?php if ($show_wordcloud==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
         <option value="False" <?php if ($show_wordcloud==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
       </select>
     </div>
     <div class="form-group">
-      <label for="show_titleinexport">Include Title when Exported:<?php echo $show_titleinexport; ?></label>
+      <label for="show_titleinexport">Include Title when Exported:</label>
       <select class="form-control" id="show_titleinexport" name="show_titleinexport">
         <option value="True" <?php if ($show_titleinexport==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
         <option value="False" <?php if ($show_titleinexport==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
       </select>
     </div>
     <div class="form-group">
-      <label for="exportdisplay">Export Page Display:</label>
+      <label for="export_title">Custom Export Title</label>
+      <input type="input" class="form-control" id="export_title" name="export_title" value="<?php echo $export_title; ?>">
+    </div>
+    <div class="form-group">
+      <label for="exportdisplay">Export Page Display Type:</label>
       <select class="form-control" id="exportdisplay" name="exportdisplay">
         <option value="Expanded" <?php if ($exportdisplay=="Expanded") { ?> <?php echo "selected"; ?><?php } ?>>Expanded</option>
         <option value="Collapsed" <?php if ($exportdisplay=="Collapsed") { ?> <?php echo "selected"; ?><?php } ?>>Collapsed</option>
       </select>
     </div>
     <div class="form-group">
-      <label for="export_title">Export Title</label>
-      <input type="input" class="form-control" id="export_title" name="export_title" value="<?php echo $export_title; ?>">
-    </div>
-    <div class="form-group">
       <label for="title">Word Count Limit</label>
       <input type="number" class="form-control" id="wordcount_limit" name="wordcount_limit" value="<?php echo $wordcount_limit; ?>" required>
     </div>
     <div class="form-group">
-      <label for="show_wordcount">Show Word Count:<?php echo $show_wordcount; ?></label>
+      <label for="show_wordcount">Show Word Count:</label>
       <select class="form-control" id="show_wordcount" name="show_wordcount">
         <option value="True" <?php if ($show_wordcount==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
         <option value="False" <?php if ($show_wordcount==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
       </select>
     </div>
     <div class="form-group">
-      <label for="title">Text Editor Height</label>
+      <label for="title">Text Editor Height (in pixels)</label>
       <input type="number" class="form-control" id="height" name="height" value="<?php echo $height; ?>" required>
     </div>
     <div class="form-group">
-      <label for="show_wordcount">Show Download on Entry UI:<?php echo $show_downloadonentry; ?></label>
+      <label for="show_wordcount">Show Download Button on Entry UI:</label>
       <select class="form-control" id="show_downloadonentry" name="show_downloadonentry">
         <option value="True" <?php if ($show_downloadonentry==1) { ?> <?php echo "selected"; ?><?php } ?>>Yes</option>
         <option value="False" <?php if ($show_downloadonentry==0) { ?> <?php echo "selected"; ?><?php } ?>>No</option>
@@ -113,8 +107,8 @@
     <div class="form-group">
       <label for="type">Download Format:</label>  (* required)
       <select class="form-control" id="downloadformat" name="downloadformat">
-        <option value="Word" <?php if ($show_downloadonentry=='Word') { ?> <?php echo "selected"; ?><?php } ?>>Word</option>
-        <option value="PDF" <?php if ($show_downloadonentry=='PDF') { ?> <?php echo "selected"; ?><?php } ?>>PDF</option>
+        <option value="Word" <?php if ($downloadformat=='Word') { ?> <?php echo "selected"; ?><?php } ?>>Word</option>
+        <option value="PDF" <?php if ($downloadformat=='PDF') { ?> <?php echo "selected"; ?><?php } ?>>PDF</option>
       </select>
     </div>
     <div class="form-group">
