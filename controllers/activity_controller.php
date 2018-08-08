@@ -22,11 +22,17 @@
       $roles = encrypt($secret_key, $this->context_vars['roles']);
       //print_r("roles:");
       //print_r($roles);
+
       $resource_link_id = encrypt($secret_key, $this->context_vars['resource_link_id']);
       $oauth_consumer_key = encrypt($secret_key, $this->context_vars['oauth_consumer_key']);
       $lis_result_sourcedid = encrypt($secret_key, $this->context_vars['lis_result_sourcedid']);
       $lis_outcome_service_url = encrypt($secret_key, $this->context_vars['lis_outcome_service_url']);
-
+/*
+      $resource_link_id = $this->context_vars['resource_link_id'];
+      $oauth_consumer_key = $this->context_vars['oauth_consumer_key'];
+      $lis_result_sourcedid = $this->context_vars['lis_result_sourcedid'];
+      $lis_outcome_service_url = $this->context_vars['lis_outcome_service_url'];
+*/
       $title = "";
       $entry_title = "Journal Entry";
       $introtext = "";
@@ -138,14 +144,15 @@
       //send grade back to LTI container
       $sendgrade = $this->context_vars['sendgrade'];
 
-      include ('config.php');
-      $sendgrade = $config['sendgrade'];
+      //include ('config.php');
+      //$sendgrade = $config['sendgrade'];
 
 
-      if ($sendgrade==True)
+      //if ($sendgrade==True)
+      if ($lis_outcome_service_url!='')
       {
         $lti_vars = array('lis_result_sourcedid'=>$lis_result_sourcedid, 'oauth_consumer_key'=>$oauth_consumer_key, 'oauth_consumer_secret'=>$oauth_consumer_secret, 'lis_outcome_service_url'=>$lis_outcome_service_url);
-        send_grade2($grade,$lti_vars);
+        send_grade2(1,$lti_vars);
       }
 
       $journalentries = array();
@@ -154,7 +161,7 @@
       $journalentries = get_journalentries($db, $user_id, $activity_id);
       $tags = get_tagcloud($journalentries);
 
-      echo '{"response_id":' . $id . ', "message": "The reflection was updated.", "tags": '. $tags . '}';
+      echo '{"response_id":' . $id . ', "message": "The reflection was updated.' . $oauth_consumer_key .'", "tags": '. $tags . '}';
 
     }
 
@@ -165,7 +172,7 @@
       $user_id = $this->context_vars['user_id'];
       $course_id = $this->context_vars['course_id'];
       $activity_displaytype = $this->context_vars['activity_displaytype'];
-
+      $message = "";
       include ('config.php');
       $secret_key = $config['secret_key'];
 
@@ -191,9 +198,10 @@
       try {
         $journalentries = get_journalentries($db, $user_id, $activity_ids);
         $tags = get_tagcloud($journalentries);
+        if (count($journalentries)>0){
         $downloadformat = $journalentries[0]['downloadformat'];
         $exportdisplay = $journalentries[0]['exportdisplay'];
-
+        }
       }
       catch(Exception $e) {
         $message .= '<p>' . $e->getMessage() . '</p>';

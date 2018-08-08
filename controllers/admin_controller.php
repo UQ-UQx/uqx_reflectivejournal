@@ -40,7 +40,7 @@
       $export_title = "";
       $height = 400;
       $show_downloadonentry = 0;
-      $downloadformat = "word";
+      $downloadformat = "Word";
       $downloadfilename = "reflective_journal";
       $exportdisplay = "Collapsed";
 
@@ -58,7 +58,7 @@
           $introtext = $activityobj->introtext;
           $reviewintro = $activityobj->reviewintro;
           $feedback = $activityobj->feedback;
-          $type = "text";
+          $type = $activityobj->type;
           $show_wordcloud = $activityobj->show_wordcloud;
           $show_titleinexport = $activityobj->show_titleinexport;
           $wordcount_limit = $activityobj->wordcount_limit;
@@ -76,6 +76,38 @@
     	}
 
       require_once('views/admin/addeditform.php');
+    }
+
+    public function viewall() {
+      $db = Db::instance();
+      $activity_id = $this->context_vars['activity_id'];
+      $user_id = $this->context_vars['user_id'];
+      $course_id = $this->context_vars['course_id'];
+
+      $title = "";
+
+      try {
+        $activityobj = $db->read('activity', $activity_id)->fetch();
+        if(empty($activityobj)) {
+          $message .= '<p>This activity does not exist. Please contact UQx Technical Team.</p>';
+        }
+        else {
+          $title = $activityobj->title;
+        }
+      }
+      catch(Exception $e) {
+        $message .= '<p>' . $e->getMessage() . '</p>';
+      }
+
+      $content = "";
+      $select = $db->query( 'SELECT * FROM studentresponse WHERE activity_id= :activity_id', array( 'activity_id' => $activity_id  ) );
+      while ( $row = $select->fetch() ) {
+            $content .= "Date Last Updated: " . $row->dateadded . "<br/>";
+            $content .= htmlspecialchars_decode($row->reflectivetext);
+            $content .= "<hr/>";
+      }
+
+      require_once('views/admin/viewall.php');
     }
 
     public function update() {

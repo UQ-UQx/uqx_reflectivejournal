@@ -15,7 +15,7 @@
   $secret_key = $config['secret_key'];
 
   //print_r($_POST);
-
+  error_log("Reflective journal 9 BUSLEAD1x 3t 2017: ".json_encode($_POST));
   //print_r("ctx post:" . $_POST['ctx']);
 
   if (isset($_POST['oauth_consumer_key']))
@@ -92,12 +92,12 @@
   if ($use_dummydata == True)
   {
     // Test data
-    $activityId = 6;
-    $userRoles = 'Student';
-    //$userRoles = 'Instructor';
+    $activityId = 5;
+    //$userRoles = 'Student';
+    $userRoles = 'Instructor';
     $userId = 48;
-    $activity_displaytype = 'learnerinput';
-    //$activity_displaytype = 'results';
+    //$activity_displaytype = 'learnerinput';
+    $activity_displaytype = 'results';
     //$activity_displaytype = 'showentry';
     $activities_to_include = '5,6';
 

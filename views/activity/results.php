@@ -1,3 +1,8 @@
+<?php
+header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+header("Pragma: no-cache"); // HTTP 1.0.
+header("Expires: 0"); // Proxies.
+?>
 <div class="row">
 	<div class="col-sm-8">
 
@@ -16,7 +21,8 @@
 				<input type="hidden" id="activities_to_include" name="activities_to_include" value="<?php echo $activity_ids; ?>">
 				<input type="hidden" id="lis_outcome_service_url" name="lis_outcome_service_url" value="<?php echo $lis_outcome_service_url; ?>">
 
-				<button class="btn btn-primary" type="submit">Download <?php if ($downloadformat=="Word") {echo "Word Document";} else {echo "PDF";} ?></button>
+<?php if (count($journalentries)>0) { ?>				<button class="btn btn-primary" type="submit">Download <?php if ($downloadformat=="Word") {echo "Word Document";} else {echo "PDF";} ?></button>
+ <?php } ?>
 			</form>
 		</div>
 		<p></p>

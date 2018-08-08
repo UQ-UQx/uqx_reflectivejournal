@@ -1,9 +1,5 @@
 <?php
 require_once('TagCloud.php');
-require_once 'dompdf/autoload.inc.php';
-
-// reference the Dompdf namespace
-use Dompdf\Dompdf;
 
 function remove_stop_Words($input){
 
@@ -34,89 +30,41 @@ function strip_tags_with_whitespace($string, $allowable_tags = null)
 
 function get_tagcloud($journalentries)
 {
-	$tag_cloud_json = "[]";
-	if (count($journalentries)>0){
-		$cloud = new TagCloud();
-	  foreach ($journalentries as &$entry)
-	  {
-	    $curr_entry = $str = strtolower($entry['reflectivetext']);
-	    $cloud->addString(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($curr_entry))));
-	  }
-		$tagcloud_array = $cloud->render('array');
-		//print_r($journalentries);
-		//print_r($tagcloud_array);
-
-		$tag_cloud_json = "[";
-		foreach ($tagcloud_array as $key => $item){
-			$curr_tag = $item['tag'];
-			$curr_weight = $item['size'];
-			if ($curr_tag!="")
-			{
-				$tag_cloud_json = $tag_cloud_json . '{"weight":'. $curr_weight . ',"text":"'. $curr_tag .'", "html": {"data-toggle":"tooltip", "title": "' . $curr_weight .'"}},';
-			}
-		}
-		$tag_cloud_json = rtrim($tag_cloud_json, ",");
-		$tag_cloud_json = $tag_cloud_json . "]";
-	}
-
-	return $tag_cloud_json;
+  $cloud = new TagCloud();
+  foreach ($journalentries as &$entry)
+  {
+    $curr_entry = $str = strtolower($entry['reflectivetext']);
+    $cloud->addString(remove_stop_Words(strip_tags_with_whitespace(html_entity_decode($curr_entry))));
+  }
+  return $cloud->render();
 }
 
 function get_journaldetails($db, $activity_id)
 {
   $title = "";
-	$show_titleinexport = 0;
   $activityobj = $db->read('activity', $activity_id)->fetch();
   if(!empty($activityobj)) {
     $title = $activityobj->title;
-		$show_titleinexport = $activityobj->show_titleinexport;
-		$export_title = $activityobj->export_title;
-		$downloadfilename = $activityobj->downloadfilename;
-		$downloadformat = $activityobj->downloadformat;
-		$exportdisplay = $activityobj->exportdisplay;
     //$introtext = $activityobj->introtext;
     //$feedback = $activityobj->feedback;
   }
-	$details = array('title'=>$title, 'show_titleinexport'=>$show_titleinexport, 'export_title'=>$export_title, 'downloadfilename'=>$downloadfilename, 'downloadformat'=>$downloadformat, 'exportdisplay'=>$exportdisplay);
-  return $details;
+  return $title;
 }
-
-/*
-function get_journalentries($db, $student_id, $activity_ids){
-		$activity_ids_array = explode(",", $activity_ids);
-		$journalentries = array();
-		foreach ($activity_ids_array as &$id)
-		{
-			$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id = :id', array( 'student_id' => $student_id, 'id' => $id  ) );
-			while ( $row = $select->fetch() ) {
-	      $details = get_journaldetails($db, $row->activity_id);
-	      $entry = array('activity_id'=>$row->activity_id, 'title'=>$details['title'], 'show_titleinexport'=>$details['show_titleinexport'], 'export_title'=>$details['export_title'], 'downloadfilename'=>$details['downloadfilename'], 'downloadformat'=>$details['downloadformat'], 'exportdisplay'=>$details['exportdisplay'],  'reflectivetext'=>$row->reflectivetext);
-	      array_push($journalentries, $entry);
-	    }
-		}
-		return $journalentries;
-}
-*/
-
 
 function get_journalentries($db, $student_id, $activity_ids){
     $journalentries = array();
-    //print_r($activity_ids);
-    $activity_ids_arr=explode(",",$activity_ids);
-    foreach ($activity_ids_arr as &$value) {
+    foreach ($activity_ids as &$value) {
      $activity_id = $value;
      $curr_reflectivetext = "";
-     $select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id=:activity_id ORDER BY response_id ASC', array( 'student_id' => $student_id, 'activity_id' => $activity_id  ) );
+     $select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id=:activity_ids ORDER BY response_id ASC', array( 'student_id' => $student_id, 'activity_id' => $activity_id  ) );
       while ( $row = $select->fetch() ) {
           $curr_reflectivetext =  $row->reflectivetext;
           //$title = get_journaldetails($db, $row->activity_id);
           //$entry = array('activity_id'=>$row->activity_id, 'title'=>$title, 'reflectivetext'=>$row->reflectivetext);
           //array_push($journalentries, $entry);
       }
-      $details = get_journaldetails($db, $activity_id);
-      //$entry = array('activity_id'=>$activity_id, 'title'=>$title, 'reflectivetext'=>$curr_reflectivetext);
-      $entry = array('activity_id'=>$activity_id, 'title'=>$details['title'], 'show_titleinexport'=>$details['show_titleinexport'], 'export_title'=>$details['export_title'], 'downloadfilename'=>$details['downloadfilename'], 'downloadformat'=>$details['downloadformat'], 'exportdisplay'=>$details['exportdisplay'],'reflectivetext'=>$curr_reflectivetext);
-
+      $title = get_journaldetails($db, $activity_id);
+      $entry = array('activity_id'=>$activity_id, 'title'=>$title, 'reflectivetext'=>$curr_reflectivetext);
       array_push($journalentries, $entry);
     }
     //$select = $db->query( 'SELECT * FROM studentresponse WHERE student_id = :student_id AND activity_id IN (:activity_ids)', array( 'student_id' => $student_id, 'activity_ids' => $activity_ids  ) );
@@ -132,30 +80,22 @@ function get_journalentries($db, $student_id, $activity_ids){
 function buildandexport_word($db, $student_id, $activity_ids){
 
   // Load the files we need:
-  require_once 'lib/htmltodocx_0_6_5_alpha/phpword/PHPWord.php';
-  require_once 'lib/htmltodocx_0_6_5_alpha/simplehtmldom/simple_html_dom.php';
-  require_once 'lib/htmltodocx_0_6_5_alpha/htmltodocx_converter/h2d_htmlconverter.php';
-  require_once 'lib/htmltodocx_0_6_5_alpha/example_files/styles.inc';
+  require_once 'htmltodocx_0_6_5_alpha/phpword/PHPWord.php';
+  require_once 'htmltodocx_0_6_5_alpha/simplehtmldom/simple_html_dom.php';
+  require_once 'htmltodocx_0_6_5_alpha/htmltodocx_converter/h2d_htmlconverter.php';
+  require_once 'htmltodocx_0_6_5_alpha/example_files/styles.inc';
 
   // Functions to support this example.
-  require_once 'lib/htmltodocx_0_6_5_alpha/documentation/support_functions.inc';
+  require_once 'htmltodocx_0_6_5_alpha/documentation/support_functions.inc';
 
   // HTML fragment we want to parse:
   $entries_array = get_journalentries($db, $student_id, $activity_ids);
 
   $html = "";
-	$downloadfilename = 'reflective_journal.docx';
   foreach ($entries_array as &$entry)
   {
-		if ($entry['show_titleinexport']==1){
-			$title = $entry['title'];
-			if ($entry['export_title']!=""){
-				$title = $entry['export_title'];
-			}
-			$html = $html . '<h2 style="text-align: center">' . $title . '</h2>';
-		}
+    $html = $html . "<h2>" . $entry['title'] . "</h2>";
     $html = $html . htmlspecialchars_decode($entry['reflectivetext']);
-		$downloadfilename = $entry['downloadfilename'] . 'docx';
   }
   //file_get_contents('example_files/example_html.html');
   // $html = file_get_contents('test/table.html');
@@ -188,7 +128,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
     'base_root' => $paths['base_root'],
     'base_path' => $paths['base_path'],
     // Optional parameters - showing the defaults if you don't set anything:
-    'current_style' => array('size' => '12', 'name' => 'Times New Roman',), // The PHPWord style on the top element - may be inherited by descendent elements. 'indentation' => array('firstLine' => 100)
+    'current_style' => array('size' => '11'), // The PHPWord style on the top element - may be inherited by descendent elements.
     'parents' => array(0 => 'body'), // Our parent is body.
     'list_depth' => 0, // This is the current depth of any current list.
     'context' => 'section', // Possible values - section, footer or header.
@@ -218,7 +158,7 @@ function buildandexport_word($db, $student_id, $activity_ids){
   // Download the file:
   header('Content-Description: File Transfer');
   header('Content-Type: application/octet-stream');
-  header('Content-Disposition: attachment; filename=reflective_journal.docx');
+  header('Content-Disposition: attachment; filename=labreport.docx');
   header('Content-Transfer-Encoding: binary');
   header('Expires: 0');
   header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -230,47 +170,4 @@ function buildandexport_word($db, $student_id, $activity_ids){
   unlink($h2d_file_uri);
   exit;
 }
-
-function buildandexport_pdf($db, $student_id, $activity_ids){
-
-  // HTML fragment we want to parse:
-  $entries_array = get_journalentries($db, $student_id, $activity_ids);
-
-  $html = "";
-	$downloadfilename = 'reflective_journal.pdf';
-  foreach ($entries_array as &$entry)
-  {
-		if ($entry['show_titleinexport']==1){
-			$title = $entry['title'];
-			if ($entry['export_title']!=""){
-				$title = $entry['export_title'];
-			}
-			$html = $html . '<h2 style="text-align: center">' . $title . '</h2>';
-		}
-    $html = $html . htmlspecialchars_decode($entry['reflectivetext']);
-		$downloadfilename = $entry['downloadfilename'] . 'pdf';
-  }
-
-  $html = '<html><body>' . $html . '</body></html>';
-
-
-
-	// instantiate and use the dompdf class
-	$dompdf = new Dompdf();
-	$dompdf->loadHtml($html);
-
-	// (Optional) Setup the paper size and orientation
-	$dompdf->setPaper('A4', 'portrait');
-
-	// Render the HTML as PDF
-	$dompdf->render();
-
-	// Output the generated PDF to Browser
-	//$dompdf->stream();
-
-	$dompdf->stream($downloadfilename, array("Attachment" => true));
-
-	exit(0);
-}
-
 ?>

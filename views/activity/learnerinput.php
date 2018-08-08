@@ -17,6 +17,19 @@
         <input type="hidden" id="activities_to_include" name="activities_to_include" value="<?php echo $activities_to_include; ?>">
         <div class="pull-right"><button class="btn btn-link" type="submit">Edit LTI Activity</button></div>
       </form>
+      <form role="form" id="editactivity" action="?controller=admin&action=viewall" method="post">
+        <input type="hidden" id="activity_id" name="activity_id" value="<?php echo $activity_id; ?>">
+        <input type="hidden" id="course_id" name="course_id" value="<?php echo $course_id; ?>">
+        <input type="hidden" id="activity_displaytype" name="activity_displaytype" value="<?php echo $activity_displaytype; ?>">
+        <input type="hidden" id="ctx" name="ctx" value="<?php echo $ctx; ?>">
+        <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
+        <input type="hidden" id="resource_link_id" name="resource_link_id" value="<?php echo $resource_link_id; ?>">
+        <input type="hidden" id="consumer_key" name="consumer_key" value="<?php echo $oauth_consumer_key; ?>">
+        <input type="hidden" id="lis_result_sourcedid" name="lis_result_sourcedid" value="<?php echo $lis_result_sourcedid; ?>">
+        <input type="hidden" id="roles" name="roles" value="<?php echo $roles; ?>">
+        <input type="hidden" id="activities_to_include" name="activities_to_include" value="<?php echo $activities_to_include; ?>">
+        <div class="pull-right"><button class="btn btn-link" type="submit">View Learner Responses</button></div>
+      </form>
     </div>
   </div>
 <?php } ?>
@@ -40,7 +53,7 @@
     <div class="panel panel-default">
       <div class="panel-heading"><?php echo $entry_title; ?></div>
       <div class="panel-body">
-        <form role="form" data-toggle="validator" id="downloadform" action="?controller=activity&action=downloadpdf&format=pdf" method="post">
+        <form role="form" data-toggle="validator" id="downloadform" action="?controller=activity&<?php if ($downloadformat=="Word") {echo "action=downloadword&format=word";} else {echo "action=downloadpdf&format=pdf";} ?>" method="post">
           <input type="hidden" id="activity_id" name="activity_id" value="<?php echo $activity_id; ?>">
   				<input type="hidden" id="course_id" name="course_id" value="<?php echo $course_id; ?>">
   				<input type="hidden" id="activity_displaytype" name="activity_displaytype" value="<?php echo $activity_displaytype; ?>">
@@ -146,9 +159,12 @@
 
               //console.log($('#summernote').summernote('code'));
               var entered_text = $('#summernote').summernote('code');
+              entered_text = entered_text.replace(/&nbsp;/gi, " ");
+              entered_text = entered_text.replace(/&amp;nbsp;/gi, " ");
+              entered_text = entered_text.replace(/nbsp;/gi, " ");
               entered_text = entered_text.replace(new RegExp('&nbsp;', 'gi'), " ").replace(new RegExp('<\/li>', 'gi'), " ").replace(new RegExp('<li>', 'gi'), " ").replace(new RegExp('<\/p>', 'gi'), " ").replace(new RegExp('<p>', 'gi'), " ").replace(new RegExp('<br>', 'gi'), " ");
 
-              //console.log(entered_text);
+              console.log(entered_text);
               entered_text = entered_text.replace(/(<([^>]+)>)/ig, "").replace(/( )/, " ");
               //console.log(entered_text);
               var word_count = count_words(entered_text);
@@ -171,8 +187,11 @@
       });
 
       $( "#submitbtn" ).click(function() {
-
-        $('#reflectivetext').val($('#summernote').summernote('code'));
+                      var entered_text = $('#summernote').summernote('code');
+              entered_text = entered_text.replace(/&nbsp;/gi, " ");
+              entered_text = entered_text.replace(/&amp;nbsp;/gi, " ");
+              entered_text = entered_text.replace(/nbsp;/gi, " ");
+        $('#reflectivetext').val(entered_text);
         if (($('#reflectivetext').val() == "") || ($('#reflectivetext').val() == "<p><br></p>"))
         {
           $('#feedback_container').hide();
